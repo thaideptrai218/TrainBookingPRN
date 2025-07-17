@@ -50,8 +50,7 @@
                          Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
                          Height="30"
                          Padding="5"
-                         VerticalAlignment="Center"
-                         Watermark="Search trains..."/>
+                         VerticalAlignment="Center"/>
                 
                 <Button Grid.Column="1" 
                         Content="Search" 

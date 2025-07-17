@@ -1,0 +1,260 @@
+﻿<UserControl
+    x:Class="TrainBookingApp.Views.Manager.TripManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:TrainBookingApp.Views.Manager">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Trip List  -->
+        <Grid Grid.Column="0" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,10"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="Trip List" />
+
+            <!--  Filter Buttons  -->
+            <StackPanel
+                Grid.Row="1"
+                Margin="0,0,0,10"
+                Orientation="Horizontal">
+                <Button
+                    Width="80"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Command="{Binding RefreshCommand}"
+                    Content="All Trips" />
+
+                <Button
+                    Width="80"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Background="LightGreen"
+                    Command="{Binding ShowActiveTripsCommand}"
+                    Content="Active Only" />
+
+                <Button
+                    Width="80"
+                    Height="30"
+                    Background="LightBlue"
+                    Command="{Binding ShowTodaysTripsCommand}"
+                    Content="Today's Trips" />
+            </StackPanel>
+
+            <!--  Search  -->
+            <Grid Grid.Row="2" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    Grid.Column="0"
+                    Height="30"
+                    Padding="5"
+                    VerticalAlignment="Center"
+                    Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button
+                    Grid.Column="1"
+                    Width="80"
+                    Height="30"
+                    Margin="5,0,0,0"
+                    Command="{Binding SearchTripsCommand}"
+                    Content="Search" />
+            </Grid>
+
+            <DataGrid
+                Grid.Row="3"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                ItemsSource="{Binding Trips}"
+                SelectedItem="{Binding SelectedTrip}"
+                SelectionChanged="TripDataGrid_SelectionChanged"
+                SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding Train.TrainName}"
+                        Header="Train" />
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding Route.RouteName}"
+                        Header="Route" />
+                    <DataGridTextColumn
+                        Width="120"
+                        Binding="{Binding DepartureDateTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                        Header="Departure" />
+                    <DataGridTextColumn
+                        Width="120"
+                        Binding="{Binding ArrivalDateTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                        Header="Arrival" />
+                    <DataGridTextColumn
+                        Width="70"
+                        Binding="{Binding TripStatus}"
+                        Header="Status" />
+                    <DataGridCheckBoxColumn
+                        Width="50"
+                        Binding="{Binding IsHolidayTrip}"
+                        Header="Holiday" />
+                    <DataGridTextColumn
+                        Width="70"
+                        Binding="{Binding BasePriceMultiplier}"
+                        Header="Price Multi" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!--  Trip Form  -->
+        <Grid Grid.Column="1" Margin="15,5,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,15"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="Trip Details" />
+
+            <TextBlock
+                Grid.Row="1"
+                FontWeight="Bold"
+                Text="Route:" />
+            <ComboBox
+                Grid.Row="2"
+                Height="30"
+                Margin="0,5,0,10"
+                DisplayMemberPath="RouteName"
+                ItemsSource="{Binding Routes}"
+                SelectedItem="{Binding SelectedRoute}" />
+
+            <TextBlock
+                Grid.Row="3"
+                FontWeight="Bold"
+                Text="Train:" />
+            <ComboBox
+                Grid.Row="4"
+                Height="30"
+                Margin="0,5,0,10"
+                DisplayMemberPath="TrainName"
+                ItemsSource="{Binding Trains}"
+                SelectedItem="{Binding SelectedTrain}" />
+
+            <TextBlock
+                Grid.Row="5"
+                FontWeight="Bold"
+                Text="Departure Date:" />
+            <DatePicker
+                Grid.Row="6"
+                Height="30"
+                Margin="0,5,0,10"
+                SelectedDate="{Binding TripDepartureDate}" />
+
+            <TextBlock
+                Grid.Row="7"
+                FontWeight="Bold"
+                Text="Departure Time:" />
+            <TextBox
+                Name="DepartureTimeTextBox"
+                Grid.Row="8"
+                Height="30"
+                Margin="0,5,0,10"
+                Text="{Binding TripDepartureTime, StringFormat={}{0:hh\\:mm}}" />
+
+            <TextBlock
+                Grid.Row="9"
+                FontWeight="Bold"
+                Text="Arrival Time:" />
+            <TextBox
+                Name="ArrivalTimeTextBox"
+                Grid.Row="10"
+                Height="30"
+                Margin="0,5,0,10"
+                Text="{Binding TripArrivalTime, StringFormat={}{0:hh\\:mm}}" />
+
+            <TextBlock
+                Grid.Row="11"
+                FontWeight="Bold"
+                Text="Price Multiplier:" />
+            <TextBox
+                Grid.Row="12"
+                Height="30"
+                Margin="0,5,0,10"
+                Text="{Binding BasePriceMultiplier, UpdateSourceTrigger=PropertyChanged}" />
+
+            <CheckBox
+                Grid.Row="13"
+                Margin="0,5,0,15"
+                Content="Holiday Trip"
+                IsChecked="{Binding IsHolidayTrip}" />
+
+            <!--  Trip Action Buttons  -->
+            <StackPanel Grid.Row="15" VerticalAlignment="Bottom">
+                <Button
+                    Height="35"
+                    Margin="0,5"
+                    Background="LightGreen"
+                    Command="{Binding AddTripCommand}"
+                    Content="Add Trip" />
+
+                <Button
+                    Height="35"
+                    Margin="0,5"
+                    Background="LightBlue"
+                    Command="{Binding UpdateTripCommand}"
+                    Content="Update Trip" />
+
+                <Button
+                    Height="35"
+                    Margin="0,5"
+                    Background="Orange"
+                    Command="{Binding CancelTripCommand}"
+                    Content="Cancel Trip" />
+
+                <Button
+                    Height="35"
+                    Margin="0,5"
+                    Background="LightCoral"
+                    Command="{Binding DeleteTripCommand}"
+                    Content="Delete Trip" />
+
+                <Button
+                    Height="35"
+                    Margin="0,5"
+                    Command="{Binding ClearFormCommand}"
+                    Content="Clear Form" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
