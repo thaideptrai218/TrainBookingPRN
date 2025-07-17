@@ -1,0 +1,551 @@
+﻿<Window x:Class="TrainBookingApp.Views.ManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TrainBookingApp.Views"
+        Title="Train Booking System - Manager Dashboard" 
+        Height="800" 
+        Width="1200"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="DarkBlue" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0" 
+                           Text="Manager Dashboard" 
+                           FontSize="20" 
+                           FontWeight="Bold" 
+                           Foreground="White"
+                           VerticalAlignment="Center"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Refresh" 
+                            Command="{Binding RefreshCommand}"
+                            Width="80" 
+                            Height="30"
+                            Margin="5,0"
+                            Background="LightBlue"/>
+                    
+                    <Button Content="Logout" 
+                            Command="{Binding LogoutCommand}"
+                            Width="80" 
+                            Height="30"
+                            Margin="5,0"
+                            Background="LightCoral"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" 
+                    SelectedIndex="{Binding SelectedTabIndex}"
+                    Margin="10">
+            
+            <!-- Station Management Tab -->
+            <TabItem Header="Station Management">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Station List -->
+                    <Grid Grid.Column="0" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Station List" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+                        
+                        <!-- Search -->
+                        <Grid Grid.Row="1" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBox Grid.Column="0" 
+                                     Text="{Binding StationSearchTerm, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="30"
+                                     Padding="5"
+                                     VerticalAlignment="Center"/>
+                            
+                            <Button Grid.Column="1" 
+                                    Content="Search" 
+                                    Command="{Binding SearchStationsCommand}"
+                                    Width="80" 
+                                    Height="30"
+                                    Margin="5,0,0,0"/>
+                        </Grid>
+                        
+                        <!-- Station DataGrid -->
+                        <DataGrid Grid.Row="2" 
+                                  ItemsSource="{Binding Stations}"
+                                  SelectedItem="{Binding SelectedStation}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  SelectionMode="Single"
+                                  SelectionChanged="StationDataGrid_SelectionChanged">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Code" Binding="{Binding StationCode}" Width="80"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding StationName}" Width="150"/>
+                                <DataGridTextColumn Header="City" Binding="{Binding City}" Width="100"/>
+                                <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="100"/>
+                                <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                    
+                    <!-- Station Form -->
+                    <Grid Grid.Column="1" Margin="15,5,5,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Station Details" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,15"/>
+                        
+                        <TextBlock Grid.Row="1" Text="Station Code:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="2" 
+                                 Text="{Binding NewStationCode, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="3" Text="Station Name:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="4" 
+                                 Text="{Binding NewStationName, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="5" Text="City:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="6" 
+                                 Text="{Binding NewStationCity, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="7" Text="Region:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="8" 
+                                 Text="{Binding NewStationRegion, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="9" Text="Phone Number:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="10" 
+                                 Text="{Binding NewStationPhone, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="11" Text="Address:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="12" 
+                                 Text="{Binding NewStationAddress, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="60" 
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Margin="0,5,0,15"/>
+                        
+                        <!-- Station Action Buttons -->
+                        <StackPanel Grid.Row="13" 
+                                    VerticalAlignment="Bottom">
+                            <Button Content="Add Station" 
+                                    Command="{Binding AddStationCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="LightGreen"/>
+                            
+                            <Button Content="Update Station" 
+                                    Command="{Binding UpdateStationCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="LightBlue"/>
+                            
+                            <Button Content="Delete Station" 
+                                    Command="{Binding DeleteStationCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="LightCoral"/>
+                            
+                            <Button Content="Clear Form" 
+                                    Command="{Binding ClearStationFormCommand}"
+                                    Height="35" 
+                                    Margin="0,5"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Route Management Tab -->
+            <TabItem Header="Route Management">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Route List -->
+                    <Grid Grid.Column="0" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Routes" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+                        
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding Routes}"
+                                  SelectedItem="{Binding SelectedRoute}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  SelectionMode="Single"
+                                  SelectionChanged="RouteDataGrid_SelectionChanged">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Route Name" Binding="{Binding RouteName}" Width="150"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="200"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        
+                        <!-- Route Form -->
+                        <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                            <TextBlock Text="Route Name:" FontWeight="Bold"/>
+                            <TextBox Text="{Binding NewRouteName, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="30" 
+                                     Margin="0,5,0,10"/>
+                            
+                            <TextBlock Text="Description:" FontWeight="Bold"/>
+                            <TextBox Text="{Binding NewRouteDescription, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="60" 
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Margin="0,5,0,15"/>
+                            
+                            <Button Content="Add Route" 
+                                    Command="{Binding AddRouteCommand}"
+                                    Height="35" 
+                                    Margin="0,2"
+                                    Background="LightGreen"/>
+                            
+                            <Button Content="Update Route" 
+                                    Command="{Binding UpdateRouteCommand}"
+                                    Height="35" 
+                                    Margin="0,2"
+                                    Background="LightBlue"/>
+                            
+                            <Button Content="Delete Route" 
+                                    Command="{Binding DeleteRouteCommand}"
+                                    Height="35" 
+                                    Margin="0,2"
+                                    Background="LightCoral"/>
+                            
+                            <Button Content="Clear Form" 
+                                    Command="{Binding ClearRouteFormCommand}"
+                                    Height="35" 
+                                    Margin="0,2"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Route Stations -->
+                    <Grid Grid.Column="1" Margin="10,5,5,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Route Stations" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+                        
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding RouteStations}"
+                                  SelectedItem="{Binding SelectedRouteStation}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Seq" Binding="{Binding SequenceNumber}" Width="40"/>
+                                <DataGridTextColumn Header="Station" Binding="{Binding Station.StationName}" Width="120"/>
+                                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromStart}" Width="70"/>
+                                <DataGridTextColumn Header="Stop Time" Binding="{Binding DefaultStopTime}" Width="70"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        
+                        <Button Grid.Row="2" 
+                                Content="Remove Station" 
+                                Command="{Binding RemoveStationFromRouteCommand}"
+                                Height="35" 
+                                Margin="0,10,0,0"
+                                Background="LightCoral"/>
+                    </Grid>
+                    
+                    <!-- Available Stations -->
+                    <Grid Grid.Column="2" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Available Stations" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+                        
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding AvailableStations}"
+                                  SelectedItem="{Binding SelectedAvailableStation}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Code" Binding="{Binding StationCode}" Width="60"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding StationName}" Width="140"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        
+                        <Button Grid.Row="2" 
+                                Content="Add to Route" 
+                                Command="{Binding AddStationToRouteCommand}"
+                                Height="35" 
+                                Margin="0,10,0,0"
+                                Background="LightGreen"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Trip Management Tab -->
+            <TabItem Header="Trip Management">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Trip List -->
+                    <Grid Grid.Column="0" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Trip List" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+                        
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding Trips}"
+                                  SelectedItem="{Binding SelectedTrip}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  SelectionMode="Single"
+                                  SelectionChanged="TripDataGrid_SelectionChanged">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Train" Binding="{Binding Train.TrainName}" Width="120"/>
+                                <DataGridTextColumn Header="Route" Binding="{Binding Route.RouteName}" Width="120"/>
+                                <DataGridTextColumn Header="Departure" Binding="{Binding DepartureDateTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="130"/>
+                                <DataGridTextColumn Header="Arrival" Binding="{Binding ArrivalDateTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="130"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding TripStatus}" Width="80"/>
+                                <DataGridCheckBoxColumn Header="Holiday" Binding="{Binding IsHolidayTrip}" Width="60"/>
+                                <DataGridTextColumn Header="Price Multi" Binding="{Binding BasePriceMultiplier}" Width="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                    
+                    <!-- Trip Form -->
+                    <Grid Grid.Column="1" Margin="15,5,5,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="Trip Details" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,15"/>
+                        
+                        <TextBlock Grid.Row="1" Text="Route:" FontWeight="Bold"/>
+                        <ComboBox Grid.Row="2" 
+                                  ItemsSource="{Binding Routes}"
+                                  SelectedItem="{Binding SelectedRoute}"
+                                  DisplayMemberPath="RouteName"
+                                  Height="30" 
+                                  Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="3" Text="Train:" FontWeight="Bold"/>
+                        <ComboBox Grid.Row="4" 
+                                  ItemsSource="{Binding Trains}"
+                                  SelectedItem="{Binding SelectedTrain}"
+                                  DisplayMemberPath="TrainName"
+                                  Height="30" 
+                                  Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="5" Text="Departure Date:" FontWeight="Bold"/>
+                        <DatePicker Grid.Row="6" 
+                                    SelectedDate="{Binding TripDepartureDate}"
+                                    Height="30" 
+                                    Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="7" Text="Departure Time:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="8" 
+                                 Name="DepartureTimeTextBox"
+                                 Text="{Binding TripDepartureTime, StringFormat={}{0:hh\\:mm}}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="9" Text="Arrival Time:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="10" 
+                                 Name="ArrivalTimeTextBox"
+                                 Text="{Binding TripArrivalTime, StringFormat={}{0:hh\\:mm}}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <TextBlock Grid.Row="11" Text="Price Multiplier:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="12" 
+                                 Text="{Binding BasePriceMultiplier, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="30" 
+                                 Margin="0,5,0,10"/>
+                        
+                        <CheckBox Grid.Row="13" 
+                                  IsChecked="{Binding IsHolidayTrip}"
+                                  Content="Holiday Trip"
+                                  Margin="0,5,0,15"/>
+                        
+                        <!-- Trip Action Buttons -->
+                        <StackPanel Grid.Row="15" 
+                                    VerticalAlignment="Bottom">
+                            <Button Content="Add Trip" 
+                                    Command="{Binding AddTripCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="LightGreen"/>
+                            
+                            <Button Content="Update Trip" 
+                                    Command="{Binding UpdateTripCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="LightBlue"/>
+                            
+                            <Button Content="Cancel Trip" 
+                                    Command="{Binding CancelTripCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="Orange"/>
+                            
+                            <Button Content="Delete Trip" 
+                                    Command="{Binding DeleteTripCommand}"
+                                    Height="35" 
+                                    Margin="0,5"
+                                    Background="LightCoral"/>
+                            
+                            <Button Content="Clear Form" 
+                                    Command="{Binding ClearTripFormCommand}"
+                                    Height="35" 
+                                    Margin="0,5"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="2" Height="25">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage}" />
+            </StatusBarItem>
+        </StatusBar>
+        
+        <!-- Loading Indicator -->
+        <Grid Grid.Row="0" 
+              Grid.RowSpan="3" 
+              Background="White"
+              Opacity="0.8">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            
+            <StackPanel VerticalAlignment="Center" 
+                        HorizontalAlignment="Center">
+                <TextBlock Text="Loading..." 
+                           FontSize="16" 
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Please wait..." 
+                           FontSize="12" 
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

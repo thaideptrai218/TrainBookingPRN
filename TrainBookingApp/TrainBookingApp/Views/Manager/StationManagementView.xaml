@@ -1,0 +1,159 @@
+﻿<UserControl x:Class="TrainBookingApp.Views.Manager.StationManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TrainBookingApp.Views.Manager">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Station List -->
+        <Grid Grid.Column="0" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" 
+                       Text="Station List" 
+                       FontSize="16" 
+                       FontWeight="Bold"
+                       Margin="0,0,0,10"/>
+            
+            <!-- Search -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox Grid.Column="0" 
+                         Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
+                         Height="30"
+                         Padding="5"
+                         VerticalAlignment="Center"
+                         Watermark="Search stations..."/>
+                
+                <Button Grid.Column="1" 
+                        Content="Search" 
+                        Command="{Binding SearchStationsCommand}"
+                        Width="80" 
+                        Height="30"
+                        Margin="5,0,0,0"/>
+            </Grid>
+            
+            <!-- Station DataGrid -->
+            <DataGrid Grid.Row="2" 
+                      ItemsSource="{Binding Stations}"
+                      SelectedItem="{Binding SelectedStation}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      SelectionMode="Single"
+                      SelectionChanged="StationDataGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Code" Binding="{Binding StationCode}" Width="80"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding StationName}" Width="150"/>
+                    <DataGridTextColumn Header="City" Binding="{Binding City}" Width="100"/>
+                    <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="100"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" Width="120"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        
+        <!-- Station Form -->
+        <Grid Grid.Column="1" Margin="15,5,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" 
+                       Text="Station Details" 
+                       FontSize="16" 
+                       FontWeight="Bold"
+                       Margin="0,0,0,15"/>
+            
+            <TextBlock Grid.Row="1" Text="Station Code:" FontWeight="Bold"/>
+            <TextBox Grid.Row="2" 
+                     Text="{Binding NewStationCode, UpdateSourceTrigger=PropertyChanged}"
+                     Height="30" 
+                     Margin="0,5,0,10"/>
+            
+            <TextBlock Grid.Row="3" Text="Station Name:" FontWeight="Bold"/>
+            <TextBox Grid.Row="4" 
+                     Text="{Binding NewStationName, UpdateSourceTrigger=PropertyChanged}"
+                     Height="30" 
+                     Margin="0,5,0,10"/>
+            
+            <TextBlock Grid.Row="5" Text="City:" FontWeight="Bold"/>
+            <TextBox Grid.Row="6" 
+                     Text="{Binding NewStationCity, UpdateSourceTrigger=PropertyChanged}"
+                     Height="30" 
+                     Margin="0,5,0,10"/>
+            
+            <TextBlock Grid.Row="7" Text="Region:" FontWeight="Bold"/>
+            <TextBox Grid.Row="8" 
+                     Text="{Binding NewStationRegion, UpdateSourceTrigger=PropertyChanged}"
+                     Height="30" 
+                     Margin="0,5,0,10"/>
+            
+            <TextBlock Grid.Row="9" Text="Phone Number:" FontWeight="Bold"/>
+            <TextBox Grid.Row="10" 
+                     Text="{Binding NewStationPhone, UpdateSourceTrigger=PropertyChanged}"
+                     Height="30" 
+                     Margin="0,5,0,10"/>
+            
+            <TextBlock Grid.Row="11" Text="Address:" FontWeight="Bold"/>
+            <TextBox Grid.Row="12" 
+                     Text="{Binding NewStationAddress, UpdateSourceTrigger=PropertyChanged}"
+                     Height="60" 
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Margin="0,5,0,15"/>
+            
+            <!-- Station Action Buttons -->
+            <StackPanel Grid.Row="13" 
+                        VerticalAlignment="Bottom">
+                <Button Content="Add Station" 
+                        Command="{Binding AddStationCommand}"
+                        Height="35" 
+                        Margin="0,5"
+                        Background="LightGreen"/>
+                
+                <Button Content="Update Station" 
+                        Command="{Binding UpdateStationCommand}"
+                        Height="35" 
+                        Margin="0,5"
+                        Background="LightBlue"/>
+                
+                <Button Content="Delete Station" 
+                        Command="{Binding DeleteStationCommand}"
+                        Height="35" 
+                        Margin="0,5"
+                        Background="LightCoral"/>
+                
+                <Button Content="Clear Form" 
+                        Command="{Binding ClearFormCommand}"
+                        Height="35" 
+                        Margin="0,5"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
