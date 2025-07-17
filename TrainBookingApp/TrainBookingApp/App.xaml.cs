@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using TrainBookingApp.Models;
 using TrainBookingApp.Services;
 using TrainBookingApp.ViewModels;
+using TrainBookingApp.ViewModels.Manager;
 using TrainBookingApp.Views;
+using TrainBookingApp.Views.Manager;
 
 namespace TrainBookingApp;
 
@@ -39,16 +41,31 @@ public partial class App : Application
         services.AddTransient<IRouteService, RouteService>();
         services.AddTransient<ITripService, TripService>();
         services.AddTransient<ITrainService, TrainService>();
+        services.AddTransient<ITrainTypeService, TrainTypeService>();
 
         // Register ViewModels
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
-        services.AddTransient<ManagerViewModel>();
+        
+        // Register Manager ViewModels
+        services.AddTransient<StationManagementViewModel>();
+        services.AddTransient<TrainTypeManagementViewModel>();
+        services.AddTransient<TrainManagementViewModel>();
+        services.AddTransient<RouteManagementViewModel>();
+        services.AddTransient<TripManagementViewModel>();
+        services.AddTransient<MainManagerViewModel>();
 
         // Register Views
         services.AddTransient<LoginWindow>();
         services.AddTransient<RegisterWindow>();
         services.AddTransient<ManagerWindow>();
+        
+        // Register Manager Views
+        services.AddTransient<StationManagementView>();
+        services.AddTransient<TrainTypeManagementView>();
+        services.AddTransient<TrainManagementView>();
+        services.AddTransient<RouteManagementView>();
+        services.AddTransient<TripManagementView>();
     }
 
     protected override void OnExit(ExitEventArgs e)
