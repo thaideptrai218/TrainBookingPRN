@@ -16,13 +16,15 @@ public class MainManagerViewModel : BaseViewModel
         TrainTypeManagementViewModel trainTypeManagementViewModel,
         TrainManagementViewModel trainManagementViewModel,
         RouteManagementViewModel routeManagementViewModel,
-        TripManagementViewModel tripManagementViewModel)
+        TripManagementViewModel tripManagementViewModel,
+        PricingRuleManagementViewModel pricingRuleManagementViewModel)
     {
         StationManagementViewModel = stationManagementViewModel;
         TrainTypeManagementViewModel = trainTypeManagementViewModel;
         TrainManagementViewModel = trainManagementViewModel;
         RouteManagementViewModel = routeManagementViewModel;
         TripManagementViewModel = tripManagementViewModel;
+        PricingRuleManagementViewModel = pricingRuleManagementViewModel;
 
         // Initialize tab ViewModels collection
         TabViewModels = new ObservableCollection<IManagerTabViewModel>
@@ -31,7 +33,8 @@ public class MainManagerViewModel : BaseViewModel
             TrainTypeManagementViewModel,
             TrainManagementViewModel,
             RouteManagementViewModel,
-            TripManagementViewModel
+            TripManagementViewModel,
+            PricingRuleManagementViewModel
         };
 
         InitializeCommands();
@@ -49,6 +52,7 @@ public class MainManagerViewModel : BaseViewModel
     public TrainManagementViewModel TrainManagementViewModel { get; }
     public RouteManagementViewModel RouteManagementViewModel { get; }
     public TripManagementViewModel TripManagementViewModel { get; }
+    public PricingRuleManagementViewModel PricingRuleManagementViewModel { get; }
 
     public int SelectedTabIndex
     {
@@ -94,6 +98,7 @@ public class MainManagerViewModel : BaseViewModel
     public ICommand SwitchToTrainsCommand { get; private set; } = null!;
     public ICommand SwitchToRoutesCommand { get; private set; } = null!;
     public ICommand SwitchToTripsCommand { get; private set; } = null!;
+    public ICommand SwitchToPricingRulesCommand { get; private set; } = null!;
 
     #endregion
 
@@ -115,6 +120,7 @@ public class MainManagerViewModel : BaseViewModel
         SwitchToTrainsCommand = new RelayCommand(_ => SwitchToTab(2));
         SwitchToRoutesCommand = new RelayCommand(_ => SwitchToTab(3));
         SwitchToTripsCommand = new RelayCommand(_ => SwitchToTab(4));
+        SwitchToPricingRulesCommand = new RelayCommand(_ => SwitchToTab(5));
     }
 
     #endregion

@@ -42,10 +42,16 @@ public partial class App : Application
         services.AddTransient<ITripService, TripService>();
         services.AddTransient<ITrainService, TrainService>();
         services.AddTransient<ITrainTypeService, TrainTypeService>();
+        services.AddTransient<IPricingRuleService, PricingRuleService>();
+        services.AddTransient<IBookingService, BookingService>();
 
         // Register ViewModels
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
+        services.AddTransient<CustomerViewModel>();
+        services.AddTransient<SeatSelectionViewModel>();
+        services.AddTransient<PassengerDetailsViewModel>();
+        services.AddTransient<BookingConfirmationViewModel>();
         
         // Register Manager ViewModels
         services.AddTransient<StationManagementViewModel>();
@@ -53,11 +59,16 @@ public partial class App : Application
         services.AddTransient<TrainManagementViewModel>();
         services.AddTransient<RouteManagementViewModel>();
         services.AddTransient<TripManagementViewModel>();
+        services.AddTransient<PricingRuleManagementViewModel>();
         services.AddTransient<MainManagerViewModel>();
 
         // Register Views
         services.AddTransient<LoginWindow>();
         services.AddTransient<RegisterWindow>();
+        services.AddTransient<CustomerWindow>();
+        services.AddTransient<SeatSelectionWindow>();
+        services.AddTransient<PassengerDetailsWindow>();
+        services.AddTransient<BookingConfirmationWindow>();
         services.AddTransient<ManagerWindow>();
         
         // Register Manager Views
@@ -66,6 +77,7 @@ public partial class App : Application
         services.AddTransient<TrainManagementView>();
         services.AddTransient<RouteManagementView>();
         services.AddTransient<TripManagementView>();
+        services.AddTransient<PricingRuleManagementView>();
     }
 
     protected override void OnExit(ExitEventArgs e)

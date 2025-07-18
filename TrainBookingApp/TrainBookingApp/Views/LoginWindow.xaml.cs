@@ -13,16 +13,11 @@ public partial class LoginWindow : Window
     public LoginWindow(LoginViewModel viewModel)
     {
         InitializeComponent();
-
         _viewModel = viewModel;
-
-        // Set DataContext for data binding (similar to Java's binding setup)
         DataContext = _viewModel;
-
         // Subscribe to ViewModel events
         _viewModel.LoginSuccessful += OnLoginSuccessful;
         _viewModel.ShowRegisterRequested += OnShowRegisterRequested;
-
         // Focus on email textbox when window loads
         Loaded += (s, e) => EmailTextBox.Focus();
     }
@@ -42,25 +37,23 @@ public partial class LoginWindow : Window
         {
             // Get the application's service provider
             var app = (App)Application.Current;
-            
+
             if (user.Role == "Manager")
             {
                 // Show manager dashboard
                 var managerWindow = app.ServiceProvider.GetRequiredService<ManagerWindow>();
+                managerWindow.Initialize(user);
                 managerWindow.Show();
                 this.Close();
             }
             else
             {
-                // TODO: Show user dashboard for regular users
-                MessageBox.Show($"Welcome, {user.FullName}!\nUser dashboard will be implemented next.",
-                               "Login Successful",
-                               MessageBoxButton.OK,
-                               MessageBoxImage.Information);
-                
-                // For now, just close the login window
-                DialogResult = true;
-                Close();
+                // Show customer dashboard
+                var customerViewModel = app.ServiceProvider.GetRequiredService<CustomerViewModel>();
+                customerViewModel.Initialize(user);
+                var customerWindow = new CustomerWindow(customerViewModel);
+                customerWindow.Show();
+                this.Close();
             }
         }
         catch (Exception ex)
@@ -77,7 +70,7 @@ public partial class LoginWindow : Window
         // Get the application's service provider
         var app = (App)Application.Current;
         var registerWindow = app.ServiceProvider.GetRequiredService<RegisterWindow>();
-        
+
         registerWindow.Show();
         this.Close();
     }
