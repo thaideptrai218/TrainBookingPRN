@@ -1,0 +1,237 @@
+﻿<Window x:Class="TrainBookingApp.Views.BookingConfirmationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Booking Confirmation" 
+        Height="700" 
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        MinHeight="600"
+        MinWidth="700">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="DarkGreen" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Booking Confirmation" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               Foreground="White"/>
+                    <TextBlock Text="Review your booking details" 
+                               FontSize="12" 
+                               Foreground="LightGray"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding TotalPrice, StringFormat='Total Amount: {0:C}'}" 
+                               FontSize="16" 
+                               FontWeight="Bold"
+                               Foreground="Yellow"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" Margin="20">
+            <StackPanel>
+                <!-- Trip Details -->
+                <Border Background="LightBlue" 
+                        BorderBrush="DarkBlue" 
+                        BorderThickness="1" 
+                        Padding="15" 
+                        Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Trip Details" 
+                                       FontSize="16" 
+                                       FontWeight="Bold" 
+                                       Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding SelectedTrip.Train.TrainName, StringFormat='Train: {0}'}" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding SelectedTrip.Route.RouteName, StringFormat='Route: {0}'}" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding SelectedTrip.Train.TrainType.TypeName, StringFormat='Type: {0}'}" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Schedule" 
+                                       FontSize="16" 
+                                       FontWeight="Bold" 
+                                       Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding SelectedTrip.DepartureDateTime, StringFormat='Departure: {0:yyyy-MM-dd HH:mm}'}" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding SelectedTrip.ArrivalDateTime, StringFormat='Arrival: {0:yyyy-MM-dd HH:mm}'}" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding IsRoundTrip, StringFormat='Trip Type: {0}'}" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                
+                <!-- Seat Details -->
+                <Border Background="LightGreen" 
+                        BorderBrush="DarkGreen" 
+                        BorderThickness="1" 
+                        Padding="15" 
+                        Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Selected Seats" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,10"/>
+                        
+                        <ItemsControl ItemsSource="{Binding SelectedSeats}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <TextBlock Grid.Column="0" Text="{Binding SeatName}" FontWeight="Bold"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Coach.CoachName}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding SeatType.TypeName}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Passenger Details -->
+                <Border Background="LightYellow" 
+                        BorderBrush="Orange" 
+                        BorderThickness="1" 
+                        Padding="15" 
+                        Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Passenger Details" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,10"/>
+                        
+                        <ItemsControl ItemsSource="{Binding Passengers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <TextBlock Grid.Column="0" Text="{Binding Index}" FontWeight="Bold"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding FullName}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding IdCardNumber}"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding SelectedPassengerType.TypeName}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Payment Method -->
+                <Border Background="LightCoral" 
+                        BorderBrush="DarkRed" 
+                        BorderThickness="1" 
+                        Padding="15" 
+                        Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Payment Method" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,10"/>
+                        
+                        <ComboBox ItemsSource="{Binding PaymentMethods}"
+                                  SelectedItem="{Binding SelectedPaymentMethod}"
+                                  Width="200"
+                                  Height="30"
+                                  HorizontalAlignment="Left"/>
+                        
+                        <TextBlock Text="Note: This is a simulation. No actual payment will be processed." 
+                                   FontSize="12" 
+                                   FontStyle="Italic"
+                                   Foreground="Red"
+                                   Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Processing Status -->
+                <Border Background="WhiteSmoke" 
+                        BorderBrush="Gray" 
+                        BorderThickness="1" 
+                        Padding="15"
+                        Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Processing..." 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,10,0"/>
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="200" 
+                                     Height="20"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <!-- Action Buttons -->
+        <Grid Grid.Row="2" Background="WhiteSmoke">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" 
+                       Text="{Binding StatusMessage}" 
+                       VerticalAlignment="Center"
+                       FontStyle="Italic"/>
+            
+            <Button Grid.Column="1" 
+                    Content="Cancel Booking" 
+                    Command="{Binding CancelBookingCommand}"
+                    Width="120" 
+                    Height="35"
+                    Margin="0,0,10,0"
+                    Background="LightCoral"
+                    IsEnabled="{Binding IsProcessing, Converter={StaticResource InverseBooleanConverter}}"/>
+            
+            <Button Grid.Column="2" 
+                    Content="Confirm &amp; Pay" 
+                    Command="{Binding ConfirmBookingCommand}"
+                    Width="150" 
+                    Height="35"
+                    Background="Green"
+                    Foreground="White"
+                    FontWeight="Bold"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -78,6 +78,11 @@
             <TabItem Header="Trip Management">
                 <manager:TripManagementView DataContext="{Binding TripManagementViewModel}" />
             </TabItem>
+            
+            <!-- Pricing Rule Management Tab -->
+            <TabItem Header="Pricing Rules">
+                <manager:PricingRuleManagementView DataContext="{Binding PricingRuleManagementViewModel}" />
+            </TabItem>
         </TabControl>
         
         <!-- Status Bar -->
