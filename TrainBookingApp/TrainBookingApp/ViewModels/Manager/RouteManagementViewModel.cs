@@ -16,9 +16,11 @@ public class RouteManagementViewModel : BaseManagerViewModel
     private string _newRouteDescription = string.Empty;
     private ObservableCollection<RouteStation> _routeStations = new();
     private ObservableCollection<Station> _availableStations = new();
+    private ObservableCollection<Station> _filteredAvailableStations = new();
     private Station? _selectedAvailableStation;
     private RouteStation? _selectedRouteStation;
     private string _searchTerm = string.Empty;
+    private string _stationSearchTerm = string.Empty;
 
     public RouteManagementViewModel(IRouteService routeService, IStationService stationService)
     {
@@ -47,6 +49,7 @@ public class RouteManagementViewModel : BaseManagerViewModel
             if (SetProperty(ref _selectedRoute, value))
             {
                 LoadRouteStations();
+                LoadRouteToForm();
             }
         }
     }
@@ -75,6 +78,12 @@ public class RouteManagementViewModel : BaseManagerViewModel
         set => SetProperty(ref _availableStations, value);
     }
 
+    public ObservableCollection<Station> FilteredAvailableStations
+    {
+        get => _filteredAvailableStations;
+        set => SetProperty(ref _filteredAvailableStations, value);
+    }
+
     public Station? SelectedAvailableStation
     {
         get => _selectedAvailableStation;
@@ -93,6 +102,12 @@ public class RouteManagementViewModel : BaseManagerViewModel
         set => SetProperty(ref _searchTerm, value);
     }
 
+    public string StationSearchTerm
+    {
+        get => _stationSearchTerm;
+        set => SetProperty(ref _stationSearchTerm, value);
+    }
+
     #endregion
 
     #region Commands
@@ -103,6 +118,8 @@ public class RouteManagementViewModel : BaseManagerViewModel
     public ICommand AddStationToRouteCommand { get; private set; } = null!;
     public ICommand RemoveStationFromRouteCommand { get; private set; } = null!;
     public ICommand SearchRoutesCommand { get; private set; } = null!;
+    public ICommand SearchStationsCommand { get; private set; } = null!;
+    public ICommand ClearStationSearchCommand { get; private set; } = null!;
     public ICommand LoadRouteToFormCommand { get; private set; } = null!;
 
     #endregion
@@ -117,6 +134,8 @@ public class RouteManagementViewModel : BaseManagerViewModel
         AddStationToRouteCommand = new RelayCommand(_ => AddStationToRoute(), _ => CanAddStationToRoute());
         RemoveStationFromRouteCommand = new RelayCommand(_ => RemoveStationFromRoute(), _ => CanRemoveStationFromRoute());
         SearchRoutesCommand = new RelayCommand(_ => SearchRoutes());
+        SearchStationsCommand = new RelayCommand(_ => SearchStations());
+        ClearStationSearchCommand = new RelayCommand(_ => ClearStationSearch());
         LoadRouteToFormCommand = new RelayCommand(_ => LoadRouteToForm());
     }
 
@@ -150,6 +169,9 @@ public class RouteManagementViewModel : BaseManagerViewModel
         SelectedRoute = null;
         SelectedAvailableStation = null;
         SelectedRouteStation = null;
+        SearchTerm = string.Empty;
+        StationSearchTerm = string.Empty;
+        FilteredAvailableStations = new ObservableCollection<Station>(AvailableStations);
         SetStatusMessage("Form cleared");
     }
 
@@ -172,6 +194,7 @@ public class RouteManagementViewModel : BaseManagerViewModel
         {
             var stations = _stationService.GetAllStations();
             AvailableStations = new ObservableCollection<Station>(stations);
+            FilteredAvailableStations = new ObservableCollection<Station>(stations);
         }
         catch (Exception ex)
         {
@@ -383,6 +406,38 @@ public class RouteManagementViewModel : BaseManagerViewModel
         {
             SetErrorMessage($"Error searching routes: {ex.Message}");
         }
+    }
+
+    private void SearchStations()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(StationSearchTerm))
+            {
+                FilteredAvailableStations = new ObservableCollection<Station>(AvailableStations);
+                SetSuccessMessage($"Showing all {AvailableStations.Count} stations");
+                return;
+            }
+
+            var filteredStations = AvailableStations
+                .Where(s => s.StationName.Contains(StationSearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           s.StationCode.Contains(StationSearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           s.City.Contains(StationSearchTerm, StringComparison.OrdinalIgnoreCase));
+            
+            FilteredAvailableStations = new ObservableCollection<Station>(filteredStations);
+            SetSuccessMessage($"Found {filteredStations.Count()} stations matching '{StationSearchTerm ?? string.Empty}'");
+        }
+        catch (Exception ex)
+        {
+            SetErrorMessage($"Error searching stations: {ex.Message}");
+        }
+    }
+
+    private void ClearStationSearch()
+    {
+        StationSearchTerm = string.Empty;
+        FilteredAvailableStations = new ObservableCollection<Station>(AvailableStations);
+        SetSuccessMessage($"Station search cleared - showing all {AvailableStations.Count} stations");
     }
 
     #endregion

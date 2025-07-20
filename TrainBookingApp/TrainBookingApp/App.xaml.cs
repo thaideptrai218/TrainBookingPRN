@@ -42,6 +42,10 @@ public partial class App : Application
         services.AddTransient<ITripService, TripService>();
         services.AddTransient<ITrainService, TrainService>();
         services.AddTransient<ITrainTypeService, TrainTypeService>();
+        services.AddTransient<ICoachService, CoachService>();
+        services.AddTransient<ISeatService, SeatService>();
+        services.AddTransient<ICoachTypeService, CoachTypeService>();
+        services.AddTransient<ISeatTypeService, SeatTypeService>();
         services.AddTransient<IPricingRuleService, PricingRuleService>();
         services.AddTransient<IBookingService, BookingService>();
 

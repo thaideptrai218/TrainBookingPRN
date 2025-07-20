@@ -5,42 +5,28 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>      <!-- Train List -->
+            <ColumnDefinition Width="*"/>      <!-- Coach List -->
+            <ColumnDefinition Width="*"/>      <!-- Details Panel -->
         </Grid.ColumnDefinitions>
         
-        <!-- Train List -->
+        <!-- Train List Panel -->
         <Grid Grid.Column="0" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" 
-                       Text="Train List" 
+                       Text="Trains" 
                        FontSize="16" 
                        FontWeight="Bold"
                        Margin="0,0,0,10"/>
             
-            <!-- Filter Buttons -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-                <Button Content="All Trains" 
-                        Command="{Binding ShowAllTrainsCommand}"
-                        Width="80" 
-                        Height="30"
-                        Margin="0,0,10,0"/>
-                
-                <Button Content="Active Only" 
-                        Command="{Binding ShowActiveTrainsCommand}"
-                        Width="80" 
-                        Height="30"
-                        Background="LightGreen"/>
-            </StackPanel>
-            
-            <!-- Search -->
-            <Grid Grid.Row="2" Margin="0,0,0,10">
+            <!-- Train Search -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -48,114 +34,309 @@
                 
                 <TextBox Grid.Column="0" 
                          Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
-                         Height="30"
-                         Padding="5"
-                         VerticalAlignment="Center"/>
+                         Height="25"
+                         Padding="3"
+                         VerticalAlignment="Center"
+                         ToolTip="Search trains by name"/>
                 
                 <Button Grid.Column="1" 
                         Content="Search" 
                         Command="{Binding SearchTrainsCommand}"
-                        Width="80" 
-                        Height="30"
+                        Width="60" 
+                        Height="25"
                         Margin="5,0,0,0"/>
             </Grid>
             
             <!-- Train DataGrid -->
-            <DataGrid Grid.Row="3" 
+            <DataGrid Grid.Row="2" 
                       ItemsSource="{Binding Trains}"
                       SelectedItem="{Binding SelectedTrain}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
-                      SelectionMode="Single"
-                      SelectionChanged="TrainDataGrid_SelectionChanged">
+                      SelectionMode="Single">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Train Name" Binding="{Binding TrainName}" Width="150"/>
-                    <DataGridTextColumn Header="Train Type" Binding="{Binding TrainType.TypeName}" Width="120"/>
-                    <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="60"/>
-                    <DataGridTextColumn Header="Avg. Velocity" Binding="{Binding TrainType.AverageVelocity}" Width="100"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding TrainName}" Width="*"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding TrainType.TypeName}" Width="80"/>
+                    <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="50"/>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <!-- Train Actions -->
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+                <Button Content="Add" 
+                        Command="{Binding ShowAddTrainFormCommand}"
+                        Width="50" 
+                        Height="25"
+                        Margin="0,0,5,0"
+                        Background="LightGreen"/>
+                
+                <Button Content="Edit" 
+                        Command="{Binding ShowEditTrainFormCommand}"
+                        Width="50" 
+                        Height="25"
+                        Margin="0,0,5,0"
+                        Background="LightBlue"/>
+                
+                <Button Content="Delete" 
+                        Command="{Binding DeleteTrainCommand}"
+                        Width="50" 
+                        Height="25"
+                        Background="LightCoral"/>
+            </StackPanel>
         </Grid>
         
-        <!-- Train Form -->
-        <Grid Grid.Column="1" Margin="15,5,5,5">
+        <!-- Coach List Panel -->
+        <Grid Grid.Column="1" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" 
-                       Text="Train Details" 
+                       Text="Coaches" 
                        FontSize="16" 
                        FontWeight="Bold"
-                       Margin="0,0,0,15"/>
+                       Margin="0,0,0,10"/>
             
-            <TextBlock Grid.Row="1" Text="Train Name:" FontWeight="Bold"/>
-            <TextBox Grid.Row="2" 
-                     Text="{Binding NewTrainName, UpdateSourceTrigger=PropertyChanged}"
-                     Height="30" 
-                     Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="3" Text="Train Type:" FontWeight="Bold"/>
-            <ComboBox Grid.Row="4" 
-                      ItemsSource="{Binding TrainTypes}"
-                      SelectedItem="{Binding SelectedTrainType}"
-                      DisplayMemberPath="TypeName"
-                      Height="30" 
-                      Margin="0,5,0,10"/>
-            
-            <CheckBox Grid.Row="5" 
-                      IsChecked="{Binding NewIsActive}"
-                      Content="Active"
-                      FontWeight="Bold"
-                      Margin="0,5,0,15"/>
-            
-            <!-- Train Action Buttons -->
-            <StackPanel Grid.Row="8" 
-                        VerticalAlignment="Bottom">
-                <Button Content="Add Train" 
-                        Command="{Binding AddTrainCommand}"
-                        Height="35" 
-                        Margin="0,5"
+            <!-- Coach DataGrid -->
+            <DataGrid Grid.Row="1" 
+                      ItemsSource="{Binding Coaches}"
+                      SelectedItem="{Binding SelectedCoach}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Coach #" Binding="{Binding CoachNumber}" Width="60"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding CoachName}" Width="*"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding CoachType.TypeName}" Width="80"/>
+                    <DataGridTextColumn Header="Seats" Binding="{Binding Capacity}" Width="50"/>
+                    <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="50"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Coach Actions -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
+                <Button Content="Add Coach" 
+                        Command="{Binding ShowAddCoachFormCommand}"
+                        Width="80" 
+                        Height="25"
+                        Margin="0,0,5,0"
                         Background="LightGreen"/>
                 
-                <Button Content="Update Train" 
-                        Command="{Binding UpdateTrainCommand}"
-                        Height="35" 
-                        Margin="0,5"
+                <Button Content="Edit Coach" 
+                        Command="{Binding ShowEditCoachFormCommand}"
+                        Width="80" 
+                        Height="25"
+                        Margin="0,0,5,0"
                         Background="LightBlue"/>
                 
-                <Button Content="Activate Train" 
-                        Command="{Binding ActivateTrainCommand}"
-                        Height="35" 
-                        Margin="0,5"
-                        Background="LightGreen"/>
-                
-                <Button Content="Deactivate Train" 
-                        Command="{Binding DeactivateTrainCommand}"
-                        Height="35" 
-                        Margin="0,5"
-                        Background="Orange"/>
-                
-                <Button Content="Delete Train" 
-                        Command="{Binding DeleteTrainCommand}"
-                        Height="35" 
-                        Margin="0,5"
-                        Background="LightCoral"/>
-                
-                <Button Content="Clear Form" 
-                        Command="{Binding ClearFormCommand}"
-                        Height="35" 
-                        Margin="0,5"/>
+                <Button Content="Manage Seats" 
+                        Command="{Binding ShowSeatManagementCommand}"
+                        Width="100" 
+                        Height="25"
+                        Background="LightYellow"/>
             </StackPanel>
+        </Grid>
+
+        <!-- Details Panel (Context-Sensitive) -->
+        <Grid Grid.Column="2" Margin="5">
+            <TabControl SelectedIndex="{Binding SelectedDetailsTab}">
+                
+                <!-- Train Form Tab -->
+                <TabItem Header="Train Details">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" Text="Train Name:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="1" 
+                                 Text="{Binding NewTrainName, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="25" 
+                                 Margin="0,3,0,8"/>
+                        
+                        <TextBlock Grid.Row="2" Text="Train Type:" FontWeight="Bold"/>
+                        <ComboBox Grid.Row="3" 
+                                  ItemsSource="{Binding TrainTypes}"
+                                  SelectedItem="{Binding SelectedTrainType}"
+                                  DisplayMemberPath="TypeName"
+                                  Height="25" 
+                                  Margin="0,3,0,8"/>
+                        
+                        <CheckBox Grid.Row="4" 
+                                  IsChecked="{Binding NewIsActive}"
+                                  Content="Active"
+                                  FontWeight="Bold"
+                                  Margin="0,3,0,15"/>
+                        
+                        <StackPanel Grid.Row="6" VerticalAlignment="Bottom">
+                            <Button Content="Add Train" 
+                                    Command="{Binding AddTrainCommand}"
+                                    Height="30" 
+                                    Margin="0,2"
+                                    Background="LightGreen"/>
+                            
+                            <Button Content="Update Train" 
+                                    Command="{Binding UpdateTrainCommand}"
+                                    Height="30" 
+                                    Margin="0,2"
+                                    Background="LightBlue"/>
+                            
+                            <Button Content="Clear Form" 
+                                    Command="{Binding ClearFormCommand}"
+                                    Height="30" 
+                                    Margin="0,2"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                
+                <!-- Coach Form Tab -->
+                <TabItem Header="Coach Details">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" Text="Coach Number:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="1" 
+                                 Text="{Binding NewCoachNumber, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="25" 
+                                 Margin="0,3,0,8"/>
+                        
+                        <TextBlock Grid.Row="2" Text="Coach Name:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="3" 
+                                 Text="{Binding NewCoachName, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="25" 
+                                 Margin="0,3,0,8"/>
+                        
+                        <TextBlock Grid.Row="4" Text="Coach Type:" FontWeight="Bold"/>
+                        <ComboBox Grid.Row="5" 
+                                  ItemsSource="{Binding CoachTypes}"
+                                  SelectedItem="{Binding SelectedCoachType}"
+                                  DisplayMemberPath="TypeName"
+                                  Height="25" 
+                                  Margin="0,3,0,8"/>
+                        
+                        <TextBlock Grid.Row="6" Text="Capacity:" FontWeight="Bold"/>
+                        <TextBox Grid.Row="7" 
+                                 Text="{Binding NewCoachCapacity, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="25" 
+                                 Margin="0,3,0,15"
+                                 ToolTip="Enter a positive number (e.g., 50)"/>
+                        
+                        <StackPanel Grid.Row="8" VerticalAlignment="Bottom">
+                            <Button Content="Add Coach" 
+                                    Command="{Binding AddCoachCommand}"
+                                    Height="30" 
+                                    Margin="0,2"
+                                    Background="LightGreen"/>
+                            
+                            <Button Content="Update Coach" 
+                                    Command="{Binding UpdateCoachCommand}"
+                                    Height="30" 
+                                    Margin="0,2"
+                                    Background="LightBlue"/>
+                            
+                            <Button Content="Clear Form" 
+                                    Command="{Binding ClearCoachFormCommand}"
+                                    Height="30" 
+                                    Margin="0,2"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                
+                <!-- Seat Management Tab -->
+                <TabItem Header="Seat Management">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Grid.Row="0" 
+                                   Text="{Binding SeatManagementTitle}" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"/>
+                        
+                        <!-- Seat DataGrid -->
+                        <DataGrid Grid.Row="1" 
+                                  ItemsSource="{Binding Seats}"
+                                  SelectedItem="{Binding SelectedSeat}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Seat #" Binding="{Binding SeatNumber}" Width="60"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding SeatName}" Width="*"/>
+                                <DataGridTextColumn Header="Type" Binding="{Binding SeatType.TypeName}" Width="80"/>
+                                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="60"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Seat Form -->
+                        <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                            <TextBlock Text="Seat Number:" FontWeight="Bold"/>
+                            <TextBox Text="{Binding NewSeatNumber, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="25" 
+                                     Margin="0,3,0,8"/>
+                            
+                            <TextBlock Text="Seat Name:" FontWeight="Bold"/>
+                            <TextBox Text="{Binding NewSeatName, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="25" 
+                                     Margin="0,3,0,8"/>
+                            
+                            <TextBlock Text="Seat Type:" FontWeight="Bold"/>
+                            <ComboBox ItemsSource="{Binding SeatTypes}"
+                                      SelectedItem="{Binding SelectedSeatType}"
+                                      DisplayMemberPath="TypeName"
+                                      Height="25" 
+                                      Margin="0,3,0,10"/>
+                            
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Add Seat" 
+                                        Command="{Binding AddSeatCommand}"
+                                        Width="70" 
+                                        Height="25"
+                                        Margin="0,0,5,0"
+                                        Background="LightGreen"/>
+                                
+                                <Button Content="Update" 
+                                        Command="{Binding UpdateSeatCommand}"
+                                        Width="60" 
+                                        Height="25"
+                                        Margin="0,0,5,0"
+                                        Background="LightBlue"/>
+                                
+                                <Button Content="Delete" 
+                                        Command="{Binding DeleteSeatCommand}"
+                                        Width="60" 
+                                        Height="25"
+                                        Background="LightCoral"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                
+            </TabControl>
         </Grid>
     </Grid>
 </UserControl>

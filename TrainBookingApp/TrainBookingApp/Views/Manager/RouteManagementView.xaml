@@ -57,7 +57,6 @@
                 CanUserDeleteRows="False"
                 ItemsSource="{Binding Routes}"
                 SelectedItem="{Binding SelectedRoute}"
-                SelectionChanged="RouteDataGrid_SelectionChanged"
                 SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridTextColumn
@@ -173,6 +172,7 @@
         <Grid Grid.Column="2" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -184,12 +184,45 @@
                 FontWeight="Bold"
                 Text="Available Stations" />
 
+            <!--  Station Search  -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    Grid.Column="0"
+                    Height="25"
+                    Padding="3"
+                    VerticalAlignment="Center"
+                    Text="{Binding StationSearchTerm, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTip="Search by station name, code, or city" />
+
+                <Button
+                    Grid.Column="1"
+                    Width="60"
+                    Height="25"
+                    Margin="5,0,2,0"
+                    Command="{Binding SearchStationsCommand}"
+                    Content="Search" />
+
+                <Button
+                    Grid.Column="2"
+                    Width="45"
+                    Height="25"
+                    Margin="2,0,0,0"
+                    Command="{Binding ClearStationSearchCommand}"
+                    Content="Clear" />
+            </Grid>
+
             <DataGrid
-                Grid.Row="1"
+                Grid.Row="2"
                 AutoGenerateColumns="False"
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
-                ItemsSource="{Binding AvailableStations}"
+                ItemsSource="{Binding FilteredAvailableStations}"
                 SelectedItem="{Binding SelectedAvailableStation}"
                 SelectionMode="Single">
                 <DataGrid.Columns>
@@ -209,7 +242,7 @@
             </DataGrid>
 
             <Button
-                Grid.Row="2"
+                Grid.Row="3"
                 Height="30"
                 Margin="0,10,0,0"
                 Background="LightGreen"
