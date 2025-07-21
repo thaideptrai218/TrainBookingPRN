@@ -8,6 +8,7 @@ namespace TrainBookingApp.ViewModels;
 public class PassengerDetailsViewModel : BaseViewModel
 {
     private readonly IBookingService _bookingService;
+    private readonly IPassengerTypeService _passengerTypeService;
     private readonly List<Seat> _selectedSeats;
     private readonly Trip _selectedTrip;
     private readonly User _currentUser;
@@ -20,6 +21,7 @@ public class PassengerDetailsViewModel : BaseViewModel
 
     public PassengerDetailsViewModel(
         IBookingService bookingService,
+        IPassengerTypeService passengerTypeService,
         List<Seat> selectedSeats,
         Trip selectedTrip,
         User currentUser,
@@ -27,6 +29,7 @@ public class PassengerDetailsViewModel : BaseViewModel
         bool isRoundTrip = false)
     {
         _bookingService = bookingService;
+        _passengerTypeService = passengerTypeService;
         _selectedSeats = selectedSeats;
         _selectedTrip = selectedTrip;
         _currentUser = currentUser;
@@ -100,17 +103,13 @@ public class PassengerDetailsViewModel : BaseViewModel
     {
         try
         {
-            // For now, we'll use a simple hardcoded list
-            // In a real application, this would come from the database
-            var types = new List<PassengerType>
-            {
-                new PassengerType { PassengerTypeId = 1, TypeName = "Adult", DiscountPercentage = 0 },
-                new PassengerType { PassengerTypeId = 2, TypeName = "Child", DiscountPercentage = 0.5m },
-                new PassengerType { PassengerTypeId = 3, TypeName = "Senior", DiscountPercentage = 0.3m },
-                new PassengerType { PassengerTypeId = 4, TypeName = "Student", DiscountPercentage = 0.2m }
-            };
-            
+            var types = _passengerTypeService.GetAllPassengerTypes();
             PassengerTypes = new ObservableCollection<PassengerType>(types);
+            
+            if (!PassengerTypes.Any())
+            {
+                StatusMessage = "No passenger types found in database. Please contact support.";
+            }
         }
         catch (Exception ex)
         {

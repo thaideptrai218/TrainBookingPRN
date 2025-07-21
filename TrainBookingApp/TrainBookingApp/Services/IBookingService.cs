@@ -7,7 +7,7 @@ public interface IBookingService
     IEnumerable<Booking> GetUserBookings(int userId);
     IEnumerable<Seat> GetAvailableSeats(int tripId, int? coachId = null);
     bool IsValidBookingData(Booking booking);
-    bool CreateBooking(Booking booking, List<Passenger> passengers);
+    bool CreateBooking(Booking booking, List<Passenger> passengers, int tripId, List<int> seatIds);
     bool CancelBooking(int bookingId, string reason);
     decimal CalculateTotalPrice(int tripId, List<int> seatIds, bool isRoundTrip = false);
     bool HoldSeats(int tripId, List<int> seatIds, int userId, int holdDurationMinutes = 15);

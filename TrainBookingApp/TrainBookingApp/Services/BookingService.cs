@@ -73,12 +73,17 @@ public class BookingService : IBookingService
         return true;
     }
 
-    public bool CreateBooking(Booking booking, List<Passenger> passengers)
+    public bool CreateBooking(Booking booking, List<Passenger> passengers, int tripId, List<int> seatIds)
     {
         using var transaction = _context.Database.BeginTransaction();
         try
         {
             if (!IsValidBookingData(booking)) return false;
+            
+            if (passengers.Count != seatIds.Count)
+            {
+                throw new ArgumentException("Number of passengers must match number of seats");
+            }
 
             // Create booking
             booking.BookingDateTime = DateTime.Now;
@@ -88,15 +93,78 @@ public class BookingService : IBookingService
             _context.Bookings.Add(booking);
             _context.SaveChanges();
 
-            // Create passengers
+            // Create passengers and get their IDs
+            var createdPassengers = new List<Passenger>();
             foreach (var passenger in passengers)
             {
                 _context.Passengers.Add(passenger);
+                _context.SaveChanges(); // Save to get PassengerId
+                createdPassengers.Add(passenger);
+            }
+
+            // Create tickets for each passenger-seat combination
+            for (int i = 0; i < createdPassengers.Count; i++)
+            {
+                var passenger = createdPassengers[i];
+                var seatId = seatIds[i];
+                
+                // Get seat details for price calculation
+                var seat = _context.Seats
+                    .Include(s => s.SeatType)
+                    .Include(s => s.Coach)
+                        .ThenInclude(c => c.CoachType)
+                    .FirstOrDefault(s => s.SeatId == seatId);
+                
+                if (seat == null)
+                {
+                    throw new InvalidOperationException($"Seat with ID {seatId} not found");
+                }
+
+                // Calculate individual ticket price
+                var ticketPrice = CalculateTicketPrice(tripId, seatId);
+                
+                // Get trip details for start/end stations
+                var trip = _context.Trips
+                    .Include(t => t.Route)
+                        .ThenInclude(r => r.RouteStations)
+                        .ThenInclude(rs => rs.Station)
+                    .FirstOrDefault(t => t.TripId == tripId);
+                
+                var startStation = trip?.Route?.RouteStations?.OrderBy(rs => rs.SequenceNumber)?.First()?.Station;
+                var endStation = trip?.Route?.RouteStations?.OrderByDescending(rs => rs.SequenceNumber)?.First()?.Station;
+                
+                var ticket = new Ticket
+                {
+                    BookingId = booking.BookingId,
+                    TripId = tripId,
+                    SeatId = seatId,
+                    PassengerId = passenger.PassengerId,
+                    StartStationId = startStation?.StationId ?? 1,
+                    EndStationId = endStation?.StationId ?? 1,
+                    Price = ticketPrice,
+                    TicketStatus = "Valid",
+                    TicketCode = GenerateTicketCode(booking.BookingCode, i + 1),
+                    CoachNameSnapshot = seat.Coach?.CoachType?.TypeName ?? "Unknown",
+                    SeatNameSnapshot = seat.SeatName ?? $"Seat {seat.SeatNumber}",
+                    PassengerNameSnapshot = passenger.FullName,
+                    PassengerIdcardNumberSnapshot = passenger.IdcardNumber,
+                    IsRefundable = true
+                };
+                
+                _context.Tickets.Add(ticket);
             }
             _context.SaveChanges();
 
-            // Note: In this simplified version, we're not creating tickets automatically
-            // The tickets would be created through a separate seat selection process
+            // Release any temporary seat holds for these seats
+            var holds = _context.TemporarySeatHolds
+                .Where(h => h.TripId == tripId && seatIds.Contains(h.SeatId) && h.UserId == booking.UserId)
+                .ToList();
+            
+            if (holds.Any())
+            {
+                _context.TemporarySeatHolds.RemoveRange(holds);
+                _context.SaveChanges();
+            }
             
             transaction.Commit();
             return true;
@@ -125,7 +193,7 @@ public class BookingService : IBookingService
             // Update ticket status
             foreach (var ticket in booking.Tickets)
             {
-                ticket.TicketStatus = "Cancelled";
+                ticket.TicketStatus = "Refunded";
             }
 
             _context.SaveChanges();
@@ -172,7 +240,7 @@ public class BookingService : IBookingService
         return totalPrice;
     }
 
-    public bool HoldSeats(int tripId, List<int> seatIds, int userId, int holdDurationMinutes = 15)
+    public bool HoldSeats(int tripId, List<int> seatIds, int userId, int holdDurationMinutes = 5)
     {
         try
         {
@@ -311,5 +379,48 @@ public class BookingService : IBookingService
     {
         var seat = _context.Seats.FirstOrDefault(s => s.SeatId == seatId);
         return seat?.CoachId ?? 1;
+    }
+
+    private decimal CalculateTicketPrice(int tripId, int seatId)
+    {
+        try
+        {
+            var trip = _context.Trips
+                .Include(t => t.Route)
+                .Include(t => t.Train)
+                    .ThenInclude(tr => tr.TrainType)
+                .FirstOrDefault(t => t.TripId == tripId);
+
+            var seat = _context.Seats
+                .Include(s => s.SeatType)
+                .FirstOrDefault(s => s.SeatId == seatId);
+
+            if (trip == null || seat == null) return 0;
+
+            // Get base price from pricing rules
+            var basePrice = _pricingRuleService.CalculatePrice(
+                trip.RouteId,
+                trip.Train.TrainTypeId,
+                false, // Individual ticket price, not round trip
+                trip.DepartureDateTime);
+
+            // Apply seat type multiplier
+            var seatMultiplier = seat.SeatType?.PriceMultiplier ?? 1.0m;
+            
+            // Apply trip multiplier (for holiday trips, etc.)
+            var tripMultiplier = trip.BasePriceMultiplier;
+
+            return basePrice * seatMultiplier * tripMultiplier;
+        }
+        catch
+        {
+            // Fallback to basic calculation
+            return CalculateSeatPrice(seatId);
+        }
+    }
+
+    private string GenerateTicketCode(string bookingCode, int sequenceNumber)
+    {
+        return $"{bookingCode}-T{sequenceNumber:D2}";
     }
 }

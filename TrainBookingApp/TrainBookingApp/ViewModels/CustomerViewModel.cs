@@ -12,6 +12,7 @@ public class CustomerViewModel : BaseViewModel
     private readonly ITripService _tripService;
     private readonly IStationService _stationService;
     private readonly IPricingRuleService _pricingRuleService;
+    private readonly IPassengerTypeService _passengerTypeService;
     private User? _currentUser;
     
     private ObservableCollection<Trip> _availableTrips = new();
@@ -31,12 +32,14 @@ public class CustomerViewModel : BaseViewModel
         IBookingService bookingService,
         ITripService tripService,
         IStationService stationService,
-        IPricingRuleService pricingRuleService)
+        IPricingRuleService pricingRuleService,
+        IPassengerTypeService passengerTypeService)
     {
         _bookingService = bookingService;
         _tripService = tripService;
         _stationService = stationService;
         _pricingRuleService = pricingRuleService;
+        _passengerTypeService = passengerTypeService;
         
         InitializeCommands();
     }
@@ -283,6 +286,7 @@ public class CustomerViewModel : BaseViewModel
                 // Step 2: Passenger Details
                 var passengerDetailsViewModel = new PassengerDetailsViewModel(
                     _bookingService,
+                    _passengerTypeService,
                     seatSelectionViewModel.SelectedSeats.ToList(),
                     SelectedTrip,
                     CurrentUser,
@@ -297,6 +301,7 @@ public class CustomerViewModel : BaseViewModel
                     // Step 3: Booking Confirmation
                     var bookingConfirmationViewModel = new BookingConfirmationViewModel(
                         _bookingService,
+                        _passengerTypeService,
                         SelectedTrip,
                         seatSelectionViewModel.SelectedSeats.ToList(),
                         passengerDetailsViewModel.Passengers.ToList(),

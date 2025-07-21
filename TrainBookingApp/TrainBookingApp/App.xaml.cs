@@ -47,6 +47,7 @@ public partial class App : Application
         services.AddTransient<ICoachTypeService, CoachTypeService>();
         services.AddTransient<ISeatTypeService, SeatTypeService>();
         services.AddTransient<IPricingRuleService, PricingRuleService>();
+        services.AddTransient<IPassengerTypeService, PassengerTypeService>();
         services.AddTransient<IBookingService, BookingService>();
 
         // Register ViewModels

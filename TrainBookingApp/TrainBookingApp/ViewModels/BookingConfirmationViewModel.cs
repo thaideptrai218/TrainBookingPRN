@@ -8,6 +8,7 @@ namespace TrainBookingApp.ViewModels;
 public class BookingConfirmationViewModel : BaseViewModel
 {
     private readonly IBookingService _bookingService;
+    private readonly IPassengerTypeService _passengerTypeService;
     private readonly Trip _selectedTrip;
     private readonly List<Seat> _selectedSeats;
     private readonly List<PassengerInfo> _passengers;
@@ -21,6 +22,7 @@ public class BookingConfirmationViewModel : BaseViewModel
 
     public BookingConfirmationViewModel(
         IBookingService bookingService,
+        IPassengerTypeService passengerTypeService,
         Trip selectedTrip,
         List<Seat> selectedSeats,
         List<PassengerInfo> passengers,
@@ -29,6 +31,7 @@ public class BookingConfirmationViewModel : BaseViewModel
         bool isRoundTrip = false)
     {
         _bookingService = bookingService;
+        _passengerTypeService = passengerTypeService;
         _selectedTrip = selectedTrip;
         _selectedSeats = selectedSeats;
         _passengers = passengers;
@@ -130,19 +133,23 @@ public class BookingConfirmationViewModel : BaseViewModel
             for (int i = 0; i < Passengers.Count; i++)
             {
                 var passengerInfo = Passengers[i];
+                // Get default passenger type if none selected
+                int passengerTypeId = passengerInfo.SelectedPassengerType?.PassengerTypeId ?? GetDefaultPassengerTypeId();
+                
                 var passenger = new Passenger
                 {
                     FullName = passengerInfo.FullName,
                     IdcardNumber = passengerInfo.IdCardNumber,
                     DateOfBirth = DateOnly.FromDateTime(passengerInfo.DateOfBirth),
-                    PassengerTypeId = passengerInfo.SelectedPassengerType?.PassengerTypeId ?? 1,
+                    PassengerTypeId = passengerTypeId,
                     UserId = CurrentUser.UserId
                 };
                 passengers.Add(passenger);
             }
 
-            // Create booking with passengers
-            var bookingSuccess = _bookingService.CreateBooking(booking, passengers);
+            // Create booking with passengers and tickets
+            var seatIds = SelectedSeats.Select(s => s.SeatId).ToList();
+            var bookingSuccess = _bookingService.CreateBooking(booking, passengers, SelectedTrip.TripId, seatIds);
 
             if (bookingSuccess)
             {
@@ -156,11 +163,7 @@ public class BookingConfirmationViewModel : BaseViewModel
 
                 if (paymentSuccess)
                 {
-                    StatusMessage = "Payment processed successfully!";
-
-                    // Create tickets for each passenger
-                    await CreateTickets(booking, passengers);
-
+                    StatusMessage = "Payment processed successfully! Tickets have been issued.";
                     BookingCompleted?.Invoke(booking);
                 }
                 else
@@ -187,22 +190,6 @@ public class BookingConfirmationViewModel : BaseViewModel
         }
     }
 
-    private async Task CreateTickets(Booking booking, List<Passenger> passengers)
-    {
-        try
-        {
-            // In a real application, this would be done as part of the booking service
-            StatusMessage = "Creating tickets...";
-            await Task.Delay(1000); // Simulate ticket creation time
-
-            // For now, we'll just update the status message
-            StatusMessage = "Tickets created successfully!";
-        }
-        catch (Exception ex)
-        {
-            StatusMessage = $"Error creating tickets: {ex.Message}";
-        }
-    }
 
     private void CancelBooking()
     {
@@ -223,6 +210,27 @@ public class BookingConfirmationViewModel : BaseViewModel
     private string GenerateBookingCode()
     {
         return $"TRN{DateTime.Now:yyyyMMdd}{DateTime.Now.Ticks % 10000:D4}";
+    }
+
+    private int GetDefaultPassengerTypeId()
+    {
+        try
+        {
+            var passengerTypes = _passengerTypeService.GetAllPassengerTypes();
+            var defaultType = passengerTypes.FirstOrDefault(pt => pt.TypeName.Equals("Adult", StringComparison.OrdinalIgnoreCase))
+                           ?? passengerTypes.FirstOrDefault();
+            
+            if (defaultType == null)
+            {
+                throw new InvalidOperationException("No passenger types found in database. Please ensure passenger types are configured.");
+            }
+            
+            return defaultType.PassengerTypeId;
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Unable to get default passenger type: {ex.Message}", ex);
+        }
     }
 
     #endregion
