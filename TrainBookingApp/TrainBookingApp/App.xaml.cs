@@ -57,6 +57,7 @@ public partial class App : Application
         services.AddTransient<SeatSelectionViewModel>();
         services.AddTransient<PassengerDetailsViewModel>();
         services.AddTransient<BookingConfirmationViewModel>();
+        services.AddTransient<BookingDetailsViewModel>();
         
         // Register Manager ViewModels
         services.AddTransient<StationManagementViewModel>();
@@ -76,6 +77,7 @@ public partial class App : Application
         services.AddTransient<SeatSelectionWindow>();
         services.AddTransient<PassengerDetailsWindow>();
         services.AddTransient<BookingConfirmationWindow>();
+        services.AddTransient<BookingDetailsWindow>();
         services.AddTransient<ManagerWindow>();
         
         // Register Manager Views

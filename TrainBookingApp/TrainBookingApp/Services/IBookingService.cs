@@ -15,4 +15,6 @@ public interface IBookingService
     IEnumerable<Coach> GetTripCoaches(int tripId);
     Booking? GetBookingById(int bookingId);
     bool ProcessPayment(int bookingId, decimal amount, string paymentMethod);
+    IEnumerable<Ticket> GetBookingTickets(int bookingId);
+    Booking? GetBookingWithTicketsAndDetails(int bookingId);
 }

@@ -423,4 +423,68 @@ public class BookingService : IBookingService
     {
         return $"{bookingCode}-T{sequenceNumber:D2}";
     }
+
+    public IEnumerable<Ticket> GetBookingTickets(int bookingId)
+    {
+        try
+        {
+            return _context.Tickets
+                .Include(t => t.Trip)
+                    .ThenInclude(tr => tr.Train)
+                    .ThenInclude(train => train.TrainType)
+                .Include(t => t.Trip)
+                    .ThenInclude(tr => tr.Route)
+                .Include(t => t.Seat)
+                    .ThenInclude(s => s.Coach)
+                    .ThenInclude(c => c.CoachType)
+                .Include(t => t.Seat)
+                    .ThenInclude(s => s.SeatType)
+                .Include(t => t.Passenger)
+                    .ThenInclude(p => p.PassengerType)
+                .Include(t => t.StartStation)
+                .Include(t => t.EndStation)
+                .Where(t => t.BookingId == bookingId)
+                .OrderBy(t => t.TicketCode)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error retrieving tickets for booking {bookingId}: {ex.Message}", ex);
+        }
+    }
+
+    public Booking? GetBookingWithTicketsAndDetails(int bookingId)
+    {
+        try
+        {
+            return _context.Bookings
+                .Include(b => b.User)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Trip)
+                    .ThenInclude(tr => tr.Train)
+                    .ThenInclude(train => train.TrainType)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Trip)
+                    .ThenInclude(tr => tr.Route)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Seat)
+                    .ThenInclude(s => s.Coach)
+                    .ThenInclude(c => c.CoachType)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Seat)
+                    .ThenInclude(s => s.SeatType)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Passenger)
+                    .ThenInclude(p => p.PassengerType)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.StartStation)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.EndStation)
+                .FirstOrDefault(b => b.BookingId == bookingId);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error retrieving detailed booking {bookingId}: {ex.Message}", ex);
+        }
+    }
 }

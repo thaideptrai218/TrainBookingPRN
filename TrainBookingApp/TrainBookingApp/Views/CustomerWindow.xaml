@@ -208,16 +208,30 @@
                             <DataGridTextColumn Header="Status" Binding="{Binding BookingStatus}" Width="80"/>
                             <DataGridTextColumn Header="Payment Status" Binding="{Binding PaymentStatus}" Width="100"/>
                             <DataGridTextColumn Header="Booking Date" Binding="{Binding BookingDateTime, StringFormat=yyyy-MM-dd}" Width="100"/>
-                            <DataGridTemplateColumn Header="Action" Width="100">
+                            <DataGridTemplateColumn Header="Actions" Width="160">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Cancel" 
-                                                Command="{Binding DataContext.CancelBookingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}"
-                                                Height="25"
-                                                Background="Red"
-                                                Foreground="White"
-                                                FontSize="10"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="🎫 Details" 
+                                                    Command="{Binding DataContext.ViewBookingDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Height="25"
+                                                    Width="65"
+                                                    Background="#17a2b8"
+                                                    BorderBrush="#17a2b8"
+                                                    Foreground="White"
+                                                    FontSize="9"
+                                                    Margin="0,0,3,0"/>
+                                            <Button Content="Cancel" 
+                                                    Command="{Binding DataContext.CancelBookingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Height="25"
+                                                    Width="50"
+                                                    Background="#dc3545"
+                                                    BorderBrush="#dc3545"
+                                                    Foreground="White"
+                                                    FontSize="9"/>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

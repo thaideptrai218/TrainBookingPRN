@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using TrainBookingApp.Models;
 using TrainBookingApp.Services;
@@ -134,6 +135,7 @@ public class CustomerViewModel : BaseViewModel
     public ICommand SearchTripsCommand { get; private set; } = null!;
     public ICommand BookTripCommand { get; private set; } = null!;
     public ICommand ViewBookingHistoryCommand { get; private set; } = null!;
+    public ICommand ViewBookingDetailsCommand { get; private set; } = null!;
     public ICommand CancelBookingCommand { get; private set; } = null!;
     public ICommand SwapStationsCommand { get; private set; } = null!;
     public ICommand RefreshDataCommand { get; private set; } = null!;
@@ -147,6 +149,7 @@ public class CustomerViewModel : BaseViewModel
         SearchTripsCommand = new RelayCommand(_ => SearchTrips(), _ => CanSearchTrips());
         BookTripCommand = new RelayCommand(_ => BookTrip(), _ => CanBookTrip());
         ViewBookingHistoryCommand = new RelayCommand(_ => ViewBookingHistory());
+        ViewBookingDetailsCommand = new RelayCommand(param => ViewBookingDetails(param), param => CanViewBookingDetails(param));
         CancelBookingCommand = new RelayCommand(param => CancelBooking(param), param => CanCancelBooking(param));
         SwapStationsCommand = new RelayCommand(_ => SwapStations(), _ => CanSwapStations());
         RefreshDataCommand = new RelayCommand(_ => RefreshData());
@@ -378,6 +381,28 @@ public class CustomerViewModel : BaseViewModel
         catch (Exception ex)
         {
             StatusMessage = $"Error cancelling booking: {ex.Message}";
+        }
+    }
+
+    private bool CanViewBookingDetails(object? parameter)
+    {
+        return parameter is Booking;
+    }
+
+    private void ViewBookingDetails(object? parameter)
+    {
+        if (parameter is not Booking booking) return;
+
+        try
+        {
+            var bookingDetailsViewModel = new BookingDetailsViewModel(_bookingService, booking.BookingId);
+            var bookingDetailsWindow = new BookingDetailsWindow(bookingDetailsViewModel);
+            
+            bookingDetailsWindow.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error opening booking details: {ex.Message}";
         }
     }
 

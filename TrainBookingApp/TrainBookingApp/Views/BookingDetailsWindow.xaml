@@ -1,0 +1,230 @@
+﻿<Window x:Class="TrainBookingApp.Views.BookingDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Booking Details" Height="600" Width="900" 
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResize">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header Section -->
+        <Border Grid.Row="0" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Booking Details" FontSize="24" FontWeight="Bold" Foreground="#212529" Margin="0,0,0,10"/>
+                    <TextBlock Text="{Binding BookingCode, StringFormat='Booking Code: {0}'}" FontSize="16" Foreground="#6c757d"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" Command="{Binding CloseCommand}" Width="100" Height="35"
+                        Background="#6c757d" BorderBrush="#6c757d" Foreground="White" FontSize="14">
+                    ✕ Close
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
+            <StackPanel>
+                <!-- Booking Summary Card -->
+                <Border Background="White" BorderBrush="#dee2e6" BorderThickness="1" CornerRadius="8" Margin="0,0,0,20">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Card Header -->
+                        <Border Grid.Row="0" Background="#007bff" CornerRadius="4" Padding="12,8" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📋" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Booking Summary" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Booking Info Grid -->
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Booking Date -->
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,20,15">
+                                <TextBlock Text="Booking Date" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding BookingDate, StringFormat='MM/dd/yyyy HH:mm'}" FontSize="14" Foreground="#212529"/>
+                            </StackPanel>
+
+                            <!-- Status -->
+                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,20,15">
+                                <TextBlock Text="Booking Status" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding BookingStatus}" FontSize="14" Foreground="#28a745"/>
+                            </StackPanel>
+
+                            <!-- Payment Status -->
+                            <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,15">
+                                <TextBlock Text="Payment Status" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding PaymentStatus}" FontSize="14" Foreground="#28a745"/>
+                            </StackPanel>
+
+                            <!-- Route -->
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,20,15">
+                                <TextBlock Text="Route" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding RouteName}" FontSize="14" Foreground="#212529"/>
+                            </StackPanel>
+
+                            <!-- Train -->
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,20,15">
+                                <TextBlock Text="Train" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding TrainInfo}" FontSize="14" Foreground="#212529"/>
+                            </StackPanel>
+
+                            <!-- Total Price -->
+                            <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,15">
+                                <TextBlock Text="Total Price" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding TotalPrice, StringFormat=C}" FontSize="16" FontWeight="Bold" Foreground="#dc3545"/>
+                            </StackPanel>
+
+                            <!-- Departure -->
+                            <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,20,0">
+                                <TextBlock Text="Departure" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding DepartureTime, StringFormat='MM/dd/yyyy HH:mm'}" FontSize="14" Foreground="#212529"/>
+                            </StackPanel>
+
+                            <!-- Arrival -->
+                            <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,20,0">
+                                <TextBlock Text="Arrival" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding ArrivalTime, StringFormat='MM/dd/yyyy HH:mm'}" FontSize="14" Foreground="#212529"/>
+                            </StackPanel>
+
+                            <!-- Ticket Count -->
+                            <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,0,0,0">
+                                <TextBlock Text="Total Tickets" FontWeight="SemiBold" Foreground="#495057" FontSize="12"/>
+                                <TextBlock Text="{Binding TicketCount}" FontSize="14" Foreground="#212529"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Tickets List -->
+                <Border Background="White" BorderBrush="#dee2e6" BorderThickness="1" CornerRadius="8">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Tickets Header -->
+                        <Border Grid.Row="0" Background="#28a745" CornerRadius="4" Padding="12,8" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🎫" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Ticket Details" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                                <Border Background="White" CornerRadius="10" Padding="8,4" Margin="15,0,0,0">
+                                    <TextBlock Text="{Binding TicketCount}" Foreground="#28a745" FontSize="12" FontWeight="Bold"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Tickets List -->
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Tickets}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10" Padding="15">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Left Column -->
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding TicketCode}" FontWeight="Bold" FontSize="14" Foreground="#212529" Margin="0,0,0,5"/>
+                                                <TextBlock Text="{Binding PassengerName}" FontWeight="SemiBold" FontSize="13" Foreground="#495057" Margin="0,0,0,3"/>
+                                                <TextBlock FontSize="12" Foreground="#6c757d" Margin="0,0,0,3">
+                                                    <Run Text="ID:"/>
+                                                    <Run Text="{Binding PassengerIdCard}"/>
+                                                    <Run Text="("/>
+                                                    <Run Text="{Binding PassengerType}"/>
+                                                    <Run Text=")"/>
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding SeatInfo}" FontSize="12" Foreground="#6c757d"/>
+                                            </StackPanel>
+
+                                            <!-- Middle Column -->
+                                            <StackPanel Grid.Column="1" Margin="20,0">
+                                                <TextBlock Text="{Binding SeatType}" FontWeight="SemiBold" FontSize="12" Foreground="#495057" Margin="0,0,0,3"/>
+                                                <TextBlock Text="{Binding FormattedDepartureTime, StringFormat='Depart: {0}'}" FontSize="11" Foreground="#6c757d" Margin="0,0,0,2"/>
+                                                <TextBlock Text="{Binding FormattedArrivalTime, StringFormat='Arrive: {0}'}" FontSize="11" Foreground="#6c757d" Margin="0,0,0,8"/>
+                                                <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,2" Foreground="{Binding StatusColor}"/>
+                                                <TextBlock Text="Refundable" FontSize="11" Foreground="#28a745">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsRefundable}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+
+                                            <!-- Right Column -->
+                                            <StackPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding FormattedPrice}" FontSize="16" FontWeight="Bold" Foreground="#dc3545" HorizontalAlignment="Right"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer/Actions -->
+        <Border Grid.Row="2" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,1,0,0" Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" FontSize="12" Foreground="#6c757d" VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Command="{Binding RefreshCommand}" Height="35" Width="80" Margin="0,0,10,0"
+                            Background="White" BorderBrush="#6c757d" BorderThickness="1" Foreground="#6c757d" FontSize="12">
+                        🔄 Refresh
+                    </Button>
+                    <Button Command="{Binding PrintTicketsCommand}" Height="35" Width="100" Margin="0,0,10,0"
+                            Background="#17a2b8" BorderBrush="#17a2b8" Foreground="White" FontSize="12">
+                        🖨️ Print Tickets
+                    </Button>
+                    <Button Command="{Binding CloseCommand}" Height="35" Width="80"
+                            Background="#6c757d" BorderBrush="#6c757d" Foreground="White" FontSize="12">
+                        Close
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
