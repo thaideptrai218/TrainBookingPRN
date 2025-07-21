@@ -10,7 +10,7 @@ public class TripManagementViewModel : BaseManagerViewModel
     private readonly ITripService _tripService;
     private readonly ITrainService _trainService;
     private readonly IRouteService _routeService;
-    
+
     private ObservableCollection<Trip> _trips = new();
     private Trip? _selectedTrip;
     private ObservableCollection<Train> _trains = new();
@@ -185,7 +185,7 @@ public class TripManagementViewModel : BaseManagerViewModel
             TripArrivalTime = SelectedTrip.ArrivalDateTime.TimeOfDay;
             BasePriceMultiplier = SelectedTrip.BasePriceMultiplier;
             IsHolidayTrip = SelectedTrip.IsHolidayTrip;
-            
+
             // Set selected route and train
             SelectedRoute = Routes.FirstOrDefault(r => r.RouteId == SelectedTrip.RouteId);
             SelectedTrain = Trains.FirstOrDefault(t => t.TrainId == SelectedTrip.TrainId);
@@ -216,7 +216,7 @@ public class TripManagementViewModel : BaseManagerViewModel
         try
         {
             SetLoadingState(true, "Loading active trips...");
-            var trips = _tripService.GetAllTrips().Where(t => t.TripStatus == "Active");
+            var trips = _tripService.GetAllTrips().Where(t => t.TripStatus == "Scheduled");
             Trips = new ObservableCollection<Trip>(trips);
             SetSuccessMessage($"Active trips loaded ({trips.Count()} trips)");
         }
@@ -281,13 +281,13 @@ public class TripManagementViewModel : BaseManagerViewModel
                 DepartureDateTime = departureDateTime,
                 ArrivalDateTime = arrivalDateTime,
                 IsHolidayTrip = IsHolidayTrip,
-                TripStatus = "Active",
+                TripStatus = "Scheduled",
                 BasePriceMultiplier = BasePriceMultiplier
             };
 
             var createdTrip = _tripService.CreateTrip(trip);
             Trips.Add(createdTrip);
-            
+
             ClearForm();
             SetSuccessMessage("Trip added successfully!");
         }
@@ -366,7 +366,7 @@ public class TripManagementViewModel : BaseManagerViewModel
 
     private bool CanCancelTrip()
     {
-        return SelectedTrip != null && SelectedTrip.TripStatus == "Active";
+        return SelectedTrip != null && SelectedTrip.TripStatus == "Scheduled";
     }
 
     private void CancelTrip()
@@ -407,7 +407,7 @@ public class TripManagementViewModel : BaseManagerViewModel
                 .Where(t => t.Train.TrainName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
                            t.Route.RouteName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
                            t.TripStatus.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
-            
+
             Trips = new ObservableCollection<Trip>(trips);
             SetSuccessMessage($"Found {trips.Count()} trips");
         }

@@ -733,7 +733,7 @@ public class TrainManagementViewModel : BaseManagerViewModel
     // Coach CRUD Operations
     private bool CanAddCoach()
     {
-        return SelectedTrain != null && ValidateCoachForm();
+        return SelectedTrain != null;
     }
 
     private void AddCoach()
@@ -781,7 +781,7 @@ public class TrainManagementViewModel : BaseManagerViewModel
 
     private bool CanUpdateCoach()
     {
-        return SelectedCoach != null && ValidateCoachForm();
+        return SelectedCoach != null;
     }
 
     private void UpdateCoach()
