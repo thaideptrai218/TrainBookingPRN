@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace TrainBookingApp.Views;
 
@@ -85,5 +86,187 @@ public class StringToVisibilityConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException("ConvertBack is not implemented for StringToVisibilityConverter");
+    }
+}
+
+public class BooleanToCompartmentTypeConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isCompartmented)
+        {
+            return isCompartmented ? "COMPARTMENT" : "OPEN";
+        }
+        return "OPEN";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BooleanToBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isCompartmented)
+        {
+            return isCompartmented ? new SolidColorBrush(Color.FromRgb(40, 167, 69)) : new SolidColorBrush(Color.FromRgb(108, 117, 125));
+        }
+        return new SolidColorBrush(Color.FromRgb(108, 117, 125));
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BooleanToHeaderBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isAdding)
+        {
+            return isAdding ? new SolidColorBrush(Color.FromRgb(40, 167, 69)) : new SolidColorBrush(Color.FromRgb(23, 162, 184));
+        }
+        return new SolidColorBrush(Color.FromRgb(23, 162, 184));
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BooleanToFormTitleConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isAdding)
+        {
+            return isAdding ? "Add New Coach Type" : "Edit Coach Type";
+        }
+        return "Edit Coach Type";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BooleanToSeatFormTitleConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isAdding)
+        {
+            return isAdding ? "Add New Seat Type" : "Edit Seat Type";
+        }
+        return "Edit Seat Type";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BooleanToSaveBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isAdding)
+        {
+            return isAdding ? new SolidColorBrush(Color.FromRgb(40, 167, 69)) : new SolidColorBrush(Color.FromRgb(255, 193, 7));
+        }
+        return new SolidColorBrush(Color.FromRgb(255, 193, 7));
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BooleanToSaveTextConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isAdding)
+        {
+            return isAdding ? "➕ Create" : "💾 Update";
+        }
+        return "💾 Update";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BerthLevelToBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is int berthLevel)
+        {
+            return berthLevel switch
+            {
+                1 => new SolidColorBrush(Color.FromRgb(76, 175, 80)),   // Green for Lower
+                2 => new SolidColorBrush(Color.FromRgb(255, 152, 0)),   // Orange for Middle
+                3 => new SolidColorBrush(Color.FromRgb(244, 67, 54)),   // Red for Upper
+                _ => new SolidColorBrush(Color.FromRgb(158, 158, 158))   // Gray for Regular
+            };
+        }
+        return new SolidColorBrush(Color.FromRgb(158, 158, 158));
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BerthLevelToTextConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is int berthLevel)
+        {
+            return berthLevel switch
+            {
+                1 => "Lower",
+                2 => "Middle", 
+                3 => "Upper",
+                _ => "Regular"
+            };
+        }
+        return "Regular";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class CountToVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is int count)
+        {
+            return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+        return Visibility.Visible;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -14,6 +14,8 @@ public class MainManagerViewModel : BaseViewModel
     public MainManagerViewModel(
         StationManagementViewModel stationManagementViewModel,
         TrainTypeManagementViewModel trainTypeManagementViewModel,
+        CoachTypeManagementViewModel coachTypeManagementViewModel,
+        SeatTypeManagementViewModel seatTypeManagementViewModel,
         TrainManagementViewModel trainManagementViewModel,
         RouteManagementViewModel routeManagementViewModel,
         TripManagementViewModel tripManagementViewModel,
@@ -21,6 +23,8 @@ public class MainManagerViewModel : BaseViewModel
     {
         StationManagementViewModel = stationManagementViewModel;
         TrainTypeManagementViewModel = trainTypeManagementViewModel;
+        CoachTypeManagementViewModel = coachTypeManagementViewModel;
+        SeatTypeManagementViewModel = seatTypeManagementViewModel;
         TrainManagementViewModel = trainManagementViewModel;
         RouteManagementViewModel = routeManagementViewModel;
         TripManagementViewModel = tripManagementViewModel;
@@ -31,6 +35,8 @@ public class MainManagerViewModel : BaseViewModel
         {
             StationManagementViewModel,
             TrainTypeManagementViewModel,
+            CoachTypeManagementViewModel,
+            SeatTypeManagementViewModel,
             TrainManagementViewModel,
             RouteManagementViewModel,
             TripManagementViewModel,
@@ -49,6 +55,8 @@ public class MainManagerViewModel : BaseViewModel
 
     public StationManagementViewModel StationManagementViewModel { get; }
     public TrainTypeManagementViewModel TrainTypeManagementViewModel { get; }
+    public CoachTypeManagementViewModel CoachTypeManagementViewModel { get; }
+    public SeatTypeManagementViewModel SeatTypeManagementViewModel { get; }
     public TrainManagementViewModel TrainManagementViewModel { get; }
     public RouteManagementViewModel RouteManagementViewModel { get; }
     public TripManagementViewModel TripManagementViewModel { get; }
@@ -95,6 +103,8 @@ public class MainManagerViewModel : BaseViewModel
     public ICommand LogoutCommand { get; private set; } = null!;
     public ICommand SwitchToStationsCommand { get; private set; } = null!;
     public ICommand SwitchToTrainTypesCommand { get; private set; } = null!;
+    public ICommand SwitchToCoachTypesCommand { get; private set; } = null!;
+    public ICommand SwitchToSeatTypesCommand { get; private set; } = null!;
     public ICommand SwitchToTrainsCommand { get; private set; } = null!;
     public ICommand SwitchToRoutesCommand { get; private set; } = null!;
     public ICommand SwitchToTripsCommand { get; private set; } = null!;
@@ -117,10 +127,12 @@ public class MainManagerViewModel : BaseViewModel
         LogoutCommand = new RelayCommand(_ => Logout());
         SwitchToStationsCommand = new RelayCommand(_ => SwitchToTab(0));
         SwitchToTrainTypesCommand = new RelayCommand(_ => SwitchToTab(1));
-        SwitchToTrainsCommand = new RelayCommand(_ => SwitchToTab(2));
-        SwitchToRoutesCommand = new RelayCommand(_ => SwitchToTab(3));
-        SwitchToTripsCommand = new RelayCommand(_ => SwitchToTab(4));
-        SwitchToPricingRulesCommand = new RelayCommand(_ => SwitchToTab(5));
+        SwitchToCoachTypesCommand = new RelayCommand(_ => SwitchToTab(2));
+        SwitchToSeatTypesCommand = new RelayCommand(_ => SwitchToTab(3));
+        SwitchToTrainsCommand = new RelayCommand(_ => SwitchToTab(4));
+        SwitchToRoutesCommand = new RelayCommand(_ => SwitchToTab(5));
+        SwitchToTripsCommand = new RelayCommand(_ => SwitchToTab(6));
+        SwitchToPricingRulesCommand = new RelayCommand(_ => SwitchToTab(7));
     }
 
     #endregion

@@ -64,6 +64,16 @@
                 <manager:TrainTypeManagementView DataContext="{Binding TrainTypeManagementViewModel}" />
             </TabItem>
             
+            <!-- Coach Type Management Tab -->
+            <TabItem Header="Coach Type Management">
+                <manager:CoachTypeManagementView DataContext="{Binding CoachTypeManagementViewModel}" />
+            </TabItem>
+            
+            <!-- Seat Type Management Tab -->
+            <TabItem Header="Seat Type Management">
+                <manager:SeatTypeManagementView DataContext="{Binding SeatTypeManagementViewModel}" />
+            </TabItem>
+            
             <!-- Train Management Tab -->
             <TabItem Header="Train Management">
                 <manager:TrainManagementView DataContext="{Binding TrainManagementViewModel}" />

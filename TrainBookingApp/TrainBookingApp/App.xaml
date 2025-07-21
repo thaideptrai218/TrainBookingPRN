@@ -3,11 +3,23 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:TrainBookingApp"
-    xmlns:converters="clr-namespace:TrainBookingApp.Converters">
+    xmlns:converters="clr-namespace:TrainBookingApp.Converters"
+    xmlns:views="clr-namespace:TrainBookingApp.Views">
     <Application.Resources>
         <!-- Value Converters -->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <views:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <views:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+        <views:BooleanToCompartmentTypeConverter x:Key="BooleanToCompartmentTypeConverter" />
+        <views:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
+        <views:BooleanToHeaderBrushConverter x:Key="BooleanToHeaderBrushConverter" />
+        <views:BooleanToFormTitleConverter x:Key="BooleanToFormTitleConverter" />
+        <views:BooleanToSeatFormTitleConverter x:Key="BooleanToSeatFormTitleConverter" />
+        <views:BooleanToSaveBrushConverter x:Key="BooleanToSaveBrushConverter" />
+        <views:BooleanToSaveTextConverter x:Key="BooleanToSaveTextConverter" />
+        <views:BerthLevelToBrushConverter x:Key="BerthLevelToBrushConverter" />
+        <views:BerthLevelToTextConverter x:Key="BerthLevelToTextConverter" />
+        <views:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
     </Application.Resources>
 </Application>

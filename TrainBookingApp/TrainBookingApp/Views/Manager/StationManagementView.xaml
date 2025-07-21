@@ -51,8 +51,7 @@
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
-                      SelectionMode="Single"
-                      SelectionChanged="StationDataGrid_SelectionChanged">
+                      SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Code" Binding="{Binding StationCode}" Width="80"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding StationName}" Width="150"/>

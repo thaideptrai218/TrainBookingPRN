@@ -60,6 +60,8 @@ public partial class App : Application
         // Register Manager ViewModels
         services.AddTransient<StationManagementViewModel>();
         services.AddTransient<TrainTypeManagementViewModel>();
+        services.AddTransient<CoachTypeManagementViewModel>();
+        services.AddTransient<SeatTypeManagementViewModel>();
         services.AddTransient<TrainManagementViewModel>();
         services.AddTransient<RouteManagementViewModel>();
         services.AddTransient<TripManagementViewModel>();
@@ -78,6 +80,8 @@ public partial class App : Application
         // Register Manager Views
         services.AddTransient<StationManagementView>();
         services.AddTransient<TrainTypeManagementView>();
+        services.AddTransient<CoachTypeManagementView>();
+        services.AddTransient<SeatTypeManagementView>();
         services.AddTransient<TrainManagementView>();
         services.AddTransient<RouteManagementView>();
         services.AddTransient<TripManagementView>();
