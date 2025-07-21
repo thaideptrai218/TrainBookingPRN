@@ -14,7 +14,7 @@ public class BookingConfirmationViewModel : BaseViewModel
     private readonly User _currentUser;
     private readonly decimal _totalPrice;
     private readonly bool _isRoundTrip;
-    
+
     private string _selectedPaymentMethod = "Credit Card";
     private string _statusMessage = "Review your booking details and proceed with payment.";
     private bool _isProcessing = false;
@@ -35,7 +35,7 @@ public class BookingConfirmationViewModel : BaseViewModel
         _currentUser = currentUser;
         _totalPrice = totalPrice;
         _isRoundTrip = isRoundTrip;
-        
+
         InitializeCommands();
     }
 
@@ -48,12 +48,12 @@ public class BookingConfirmationViewModel : BaseViewModel
     public decimal TotalPrice => _totalPrice;
     public bool IsRoundTrip => _isRoundTrip;
 
-    public List<string> PaymentMethods => new List<string> 
-    { 
-        "Credit Card", 
-        "Debit Card", 
-        "Bank Transfer", 
-        "Digital Wallet" 
+    public List<string> PaymentMethods => new List<string>
+    {
+        "Credit Card",
+        "Debit Card",
+        "Bank Transfer",
+        "Digital Wallet"
     };
 
     public string SelectedPaymentMethod
@@ -120,7 +120,7 @@ public class BookingConfirmationViewModel : BaseViewModel
                 BookingDateTime = DateTime.Now,
                 TotalPrice = TotalPrice,
                 BookingStatus = "Pending",
-                PaymentStatus = "Pending",
+                PaymentStatus = "Unpaid",
                 BookingCode = GenerateBookingCode(),
                 Source = "Web Application"
             };
@@ -143,30 +143,30 @@ public class BookingConfirmationViewModel : BaseViewModel
 
             // Create booking with passengers
             var bookingSuccess = _bookingService.CreateBooking(booking, passengers);
-            
+
             if (bookingSuccess)
             {
                 StatusMessage = "Booking created successfully. Processing payment...";
-                
+
                 // Simulate payment processing
                 await Task.Delay(2000); // Simulate payment processing time
-                
+
                 // Process payment
                 var paymentSuccess = _bookingService.ProcessPayment(booking.BookingId, TotalPrice, SelectedPaymentMethod);
-                
+
                 if (paymentSuccess)
                 {
                     StatusMessage = "Payment processed successfully!";
-                    
+
                     // Create tickets for each passenger
                     await CreateTickets(booking, passengers);
-                    
+
                     BookingCompleted?.Invoke(booking);
                 }
                 else
                 {
                     StatusMessage = "Payment failed. Please try again.";
-                    
+
                     // Cancel the booking if payment failed
                     _bookingService.CancelBooking(booking.BookingId, "Payment failed");
                 }
@@ -194,7 +194,7 @@ public class BookingConfirmationViewModel : BaseViewModel
             // In a real application, this would be done as part of the booking service
             StatusMessage = "Creating tickets...";
             await Task.Delay(1000); // Simulate ticket creation time
-            
+
             // For now, we'll just update the status message
             StatusMessage = "Tickets created successfully!";
         }
@@ -211,7 +211,7 @@ public class BookingConfirmationViewModel : BaseViewModel
             // Release held seats
             var seatIds = SelectedSeats.Select(s => s.SeatId).ToList();
             _bookingService.ReleaseSeats(SelectedTrip.TripId, seatIds, CurrentUser.UserId);
-            
+
             BookingCancelled?.Invoke();
         }
         catch (Exception ex)
