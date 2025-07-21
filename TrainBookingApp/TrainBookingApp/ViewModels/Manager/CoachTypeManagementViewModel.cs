@@ -22,11 +22,11 @@ public class CoachTypeManagementViewModel : BaseManagerViewModel, IManagerTabVie
         SaveCommand = new RelayCommand(_ => Save(), _ => CanSave());
         CancelCommand = new RelayCommand(_ => Cancel(), _ => CanCancel());
         // Override the base RefreshCommand to use our specific implementation
-        RefreshCommand = new RelayCommand(async _ => await LoadCoachTypesAsync());
+        RefreshCommand = new RelayCommand(_ => LoadCoachTypes());
         
         CurrentCoachType = new CoachType();
         
-        _ = LoadCoachTypesAsync();
+        LoadCoachTypes();
     }
 
     public ObservableCollection<CoachType> CoachTypes { get; }
@@ -112,26 +112,20 @@ public class CoachTypeManagementViewModel : BaseManagerViewModel, IManagerTabVie
     public ICommand CancelCommand { get; }
     public new ICommand RefreshCommand { get; }
 
-    private async Task LoadCoachTypesAsync()
+    private void LoadCoachTypes()
     {
         try
         {
             IsLoading = true;
             ErrorMessage = null;
 
-            await Task.Run(() =>
+            var coachTypes = _coachTypeService.GetAllCoachTypes();
+            
+            CoachTypes.Clear();
+            foreach (var coachType in coachTypes)
             {
-                var coachTypes = _coachTypeService.GetAllCoachTypes();
-                
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    CoachTypes.Clear();
-                    foreach (var coachType in coachTypes)
-                    {
-                        CoachTypes.Add(coachType);
-                    }
-                });
-            });
+                CoachTypes.Add(coachType);
+            }
         }
         catch (Exception ex)
         {
@@ -147,7 +141,7 @@ public class CoachTypeManagementViewModel : BaseManagerViewModel, IManagerTabVie
     {
         if (string.IsNullOrWhiteSpace(SearchText))
         {
-            _ = LoadCoachTypesAsync();
+            LoadCoachTypes();
             return;
         }
 
@@ -328,7 +322,7 @@ public class CoachTypeManagementViewModel : BaseManagerViewModel, IManagerTabVie
 
     public override void RefreshData()
     {
-        _ = LoadCoachTypesAsync();
+        LoadCoachTypes();
     }
 
     public override void ClearForm()

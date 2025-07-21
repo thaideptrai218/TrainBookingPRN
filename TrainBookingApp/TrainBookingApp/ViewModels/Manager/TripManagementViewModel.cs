@@ -48,7 +48,27 @@ public class TripManagementViewModel : BaseManagerViewModel
     public Trip? SelectedTrip
     {
         get => _selectedTrip;
-        set => SetProperty(ref _selectedTrip, value);
+        set 
+        { 
+            SetProperty(ref _selectedTrip, value);
+            PopulateFormFromSelectedTrip();
+        }
+    }
+
+    private void PopulateFormFromSelectedTrip()
+    {
+        if (SelectedTrip != null)
+        {
+            TripDepartureDate = SelectedTrip.DepartureDateTime.Date;
+            TripDepartureTime = SelectedTrip.DepartureDateTime.TimeOfDay;
+            TripArrivalTime = SelectedTrip.ArrivalDateTime.TimeOfDay;
+            BasePriceMultiplier = SelectedTrip.BasePriceMultiplier;
+            IsHolidayTrip = SelectedTrip.IsHolidayTrip;
+
+            // Set selected route and train
+            SelectedRoute = Routes.FirstOrDefault(r => r.RouteId == SelectedTrip.RouteId);
+            SelectedTrain = Trains.FirstOrDefault(t => t.TrainId == SelectedTrip.TrainId);
+        }
     }
 
     public ObservableCollection<Train> Trains

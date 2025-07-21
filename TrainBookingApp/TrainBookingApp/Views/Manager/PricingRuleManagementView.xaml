@@ -4,250 +4,258 @@
              xmlns:local="clr-namespace:TrainBookingApp.Views.Manager">
     
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Pricing Rules List -->
-        <Grid Grid.Column="0" Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" 
-                       Text="Pricing Rules" 
-                       FontSize="16" 
-                       FontWeight="Bold"
-                       Margin="0,0,0,10"/>
-            
-            <!-- Search -->
-            <Grid Grid.Row="1" Margin="0,0,0,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header Section -->
+        <Border Grid.Row="0" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBox Grid.Column="0" 
-                         Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
-                         Height="30"
-                         Padding="5"
-                         VerticalAlignment="Center"
-                         ToolTip="Search by rule name or description"/>
-                
-                <Button Grid.Column="1" 
-                        Content="Search" 
-                        Command="{Binding SearchPricingRulesCommand}"
-                        Width="80" 
-                        Height="30"
-                        Margin="5,0,0,0"/>
+
+                <!-- Title -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Pricing Rule Management" 
+                          FontSize="24" FontWeight="Bold" Foreground="#212529" Margin="0,0,0,15"/>
+
+                <!-- Search & Filter Section -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBox Width="250" Height="35" Padding="10,8" FontSize="14"
+                             Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
+                             Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                    
+                    <Button Command="{Binding SearchPricingRulesCommand}" Margin="10,0,0,0" Height="35" Width="80"
+                            Background="#17a2b8" BorderBrush="#17a2b8" Foreground="White" FontSize="14">
+                        🔍 Search
+                    </Button>
+                    
+                    <ComboBox ItemsSource="{Binding TrainTypes}" SelectedItem="{Binding SelectedTrainTypeFilter}"
+                             DisplayMemberPath="TypeName" Height="35" Width="150" Margin="15,0,0,0"
+                             Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                    
+                    <ComboBox ItemsSource="{Binding Routes}" SelectedItem="{Binding SelectedRouteFilter}"
+                             DisplayMemberPath="RouteName" Height="35" Width="150" Margin="10,0,0,0"
+                             Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+
+                    <Button Command="{Binding TestPriceCalculationCommand}" Margin="10,0,0,0" Height="35" Width="100"
+                            Background="#fd7e14" BorderBrush="#fd7e14" Foreground="White" FontSize="14">
+                        🧮 Test Price
+                    </Button>
+                </StackPanel>
+
+                <Button Grid.Row="1" Grid.Column="1" Command="{Binding AddPricingRuleCommand}" 
+                        Height="35" Padding="20,8" FontSize="14" FontWeight="SemiBold"
+                        Background="#dc3545" BorderBrush="#dc3545" Foreground="White">
+                    ➕ Add Rule
+                </Button>
             </Grid>
-            
-            <!-- Filters -->
-            <Grid Grid.Row="2" Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <ComboBox Grid.Column="0" 
-                          ItemsSource="{Binding TrainTypes}"
-                          SelectedItem="{Binding SelectedTrainTypeFilter}"
-                          DisplayMemberPath="TypeName"
-                          Height="30"
-                          Margin="0,0,5,0"
-                          ToolTip="Filter by train type"/>
-                
-                <ComboBox Grid.Column="1" 
-                          ItemsSource="{Binding Routes}"
-                          SelectedItem="{Binding SelectedRouteFilter}"
-                          DisplayMemberPath="RouteName"
-                          Height="30"
-                          Margin="5,0,5,0"
-                          ToolTip="Filter by route"/>
-                
-                <Button Grid.Column="2" 
-                        Content="Test Price" 
-                        Command="{Binding TestPriceCalculationCommand}"
-                        Width="80" 
-                        Height="30"
-                        Margin="5,0,0,0"
-                        ToolTip="Test price calculation with selected filters"/>
-            </Grid>
-            
-            <!-- Pricing Rules DataGrid -->
-            <DataGrid Grid.Row="3" 
-                      ItemsSource="{Binding PricingRules}"
-                      SelectedItem="{Binding SelectedPricingRule}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      SelectionMode="Single"
-                      IsReadOnly="True"
-                      SelectionChanged="PricingRuleDataGrid_SelectionChanged">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Rule Name" Binding="{Binding RuleName}" Width="120"/>
-                    <DataGridTextColumn Header="Price/Km" Binding="{Binding BasePricePerKm, StringFormat=C}" Width="80"/>
-                    <DataGridTextColumn Header="Train Type" Binding="{Binding TrainType.TypeName}" Width="100"/>
-                    <DataGridTextColumn Header="Route" Binding="{Binding Route.RouteName}" Width="120"/>
-                    <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" Width="60"/>
-                    <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="60"/>
-                    <DataGridCheckBoxColumn Header="Round Trip" Binding="{Binding IsForRoundTrip}" Width="80"/>
-                    <DataGridTextColumn Header="Effective From" Binding="{Binding EffectiveFromDate, StringFormat=yyyy-MM-dd}" Width="100"/>
-                    <DataGridTextColumn Header="Effective To" Binding="{Binding EffectiveToDate, StringFormat=yyyy-MM-dd}" Width="100"/>
-                </DataGrid.Columns>
-            </DataGrid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="600"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1.5*" MinWidth="450"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Pricing Rules List -->
+            <Border Grid.Column="0" Background="White" BorderBrush="#dee2e6" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- List Header -->
+                    <Border Grid.Row="0" Background="#e9ecef" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="15,12">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="💰 Pricing Rules" FontSize="16" FontWeight="SemiBold" Foreground="#495057"/>
+                            <Border Background="#6c757d" CornerRadius="10" Padding="8,4" Margin="15,0,0,0">
+                                <TextBlock Text="{Binding PricingRules.Count}" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Pricing Rules DataGrid -->
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding PricingRules}" 
+                             SelectedItem="{Binding SelectedPricingRule}"
+                             AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                             GridLinesVisibility="None" BorderThickness="0"
+                             AlternatingRowBackground="#f8f9fa" RowBackground="White"
+                             HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Rule Name" Binding="{Binding RuleName}" Width="140"/>
+                            <DataGridTextColumn Header="Price/Km" Binding="{Binding BasePricePerKm, StringFormat=C}" Width="80"/>
+                            <DataGridTextColumn Header="Train Type" Binding="{Binding TrainType.TypeName}" Width="100"/>
+                            <DataGridTextColumn Header="Route" Binding="{Binding Route.RouteName}" Width="120"/>
+                            <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" Width="60"/>
+                            <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="50"/>
+                            <DataGridCheckBoxColumn Header="Round" Binding="{Binding IsForRoundTrip}" Width="60"/>
+                            <DataGridTextColumn Header="From" Binding="{Binding EffectiveFromDate, StringFormat=MM-dd}" Width="70"/>
+                            <DataGridTextColumn Header="To" Binding="{Binding EffectiveToDate, StringFormat=MM-dd}" Width="70"/>
+
+                            <DataGridTemplateColumn Header="Actions" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                                            <Button Command="{Binding DataContext.UpdatePricingRuleCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   CommandParameter="{Binding}" Width="28" Height="28" Margin="2,0"
+                                                   Background="#17a2b8" BorderBrush="#17a2b8" Foreground="White" FontSize="12">
+                                                ✏️
+                                            </Button>
+                                            <Button Command="{Binding DataContext.ToggleActiveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   CommandParameter="{Binding}" Width="28" Height="28" Margin="2,0"
+                                                   Background="#ffc107" BorderBrush="#ffc107" Foreground="#212529" FontSize="12">
+                                                ⚡
+                                            </Button>
+                                            <Button Command="{Binding DataContext.DeletePricingRuleCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   CommandParameter="{Binding}" Width="28" Height="28" Margin="2,0"
+                                                   Background="#dc3545" BorderBrush="#dc3545" Foreground="White" FontSize="12">
+                                                🗑️
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <!-- Pricing Rule Form -->
+            <Border Grid.Column="2" Background="White" BorderBrush="#dee2e6" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Form Header -->
+                    <Border Grid.Row="0" Background="#dc3545" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="15,12">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="💰" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Pricing Rule Details" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Form Fields -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
+                        <StackPanel>
+                            <!-- Rule Name Field -->
+                            <TextBlock Text="Rule Name *" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewRuleName, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="40" Padding="12,10" FontSize="14" Margin="0,0,0,5"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                            <TextBlock Text="Unique name for this pricing rule" 
+                                      FontSize="12" Foreground="#6c757d" Margin="0,0,0,20"/>
+
+                            <!-- Description Field -->
+                            <TextBlock Text="Description" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="60" Padding="12,10" FontSize="14" TextWrapping="Wrap" AcceptsReturn="True"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1" Margin="0,0,0,20"/>
+
+                            <!-- Base Price per Km Field -->
+                            <TextBlock Text="Base Price per Km *" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewBasePricePerKm, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="40" Padding="12,10" FontSize="14" Margin="0,0,0,5"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                            <TextBlock Text="Price per kilometer in your currency" 
+                                      FontSize="12" Foreground="#6c757d" Margin="0,0,0,20"/>
+
+                            <!-- Train Type Field -->
+                            <TextBlock Text="Train Type" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <ComboBox ItemsSource="{Binding TrainTypes}" SelectedValue="{Binding NewTrainTypeId}"
+                                     SelectedValuePath="TrainTypeId" DisplayMemberPath="TypeName"
+                                     Height="40" Margin="0,0,0,20"
+                                     Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+
+                            <!-- Route Field -->
+                            <TextBlock Text="Route" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <ComboBox ItemsSource="{Binding Routes}" SelectedValue="{Binding NewRouteId}"
+                                     SelectedValuePath="RouteId" DisplayMemberPath="RouteName"
+                                     Height="40" Margin="0,0,0,20"
+                                     Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+
+                            <!-- Priority Field -->
+                            <TextBlock Text="Priority *" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewPriority, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="40" Padding="12,10" FontSize="14" Margin="0,0,0,5"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                            <TextBlock Text="Higher priority rules are applied first" 
+                                      FontSize="12" Foreground="#6c757d" Margin="0,0,0,20"/>
+
+                            <!-- Date Fields -->
+                            <TextBlock Text="Effective From Date *" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <DatePicker SelectedDate="{Binding NewEffectiveFromDate}" Height="40" Margin="0,0,0,20"
+                                       Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+
+                            <TextBlock Text="Effective To Date" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <DatePicker SelectedDate="{Binding NewEffectiveToDate}" Height="40" Margin="0,0,0,20"
+                                       Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+
+                            <!-- Checkboxes -->
+                            <CheckBox Content="Round Trip Rule" IsChecked="{Binding NewIsForRoundTrip}" 
+                                     FontSize="14" Margin="0,0,0,10"/>
+                            
+                            <CheckBox Content="Active" IsChecked="{Binding NewIsActive}" 
+                                     FontSize="14" Margin="0,0,0,20"/>
+
+                            <!-- Pricing Rule Info -->
+                            <Border Background="#e3f2fd" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+                                <StackPanel>
+                                    <TextBlock Text="Pricing Rule Information" FontWeight="SemiBold" Foreground="#1976d2" Margin="0,0,0,10"/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#424242">
+                                        • Higher priority rules override lower priority ones<LineBreak/>
+                                        • Leave Train Type/Route empty for general rules<LineBreak/>
+                                        • Round trip rules apply discount for return journeys
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Form Actions -->
+                    <Border Grid.Row="2" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,1,0,0" Padding="20,15">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Command="{Binding ClearFormCommand}" Height="40" Padding="20,10" FontSize="14" Margin="0,0,10,0"
+                                   Background="White" BorderBrush="#6c757d" BorderThickness="1" Foreground="#6c757d">
+                                Clear Form
+                            </Button>
+                            <Button Command="{Binding AddPricingRuleCommand}" Height="40" Padding="20,10" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"
+                                   Background="#28a745" BorderBrush="#28a745" Foreground="White">
+                                💾 Add Rule
+                            </Button>
+                            <Button Command="{Binding UpdatePricingRuleCommand}" Height="40" Padding="20,10" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"
+                                   Background="#dc3545" BorderBrush="#dc3545" Foreground="White">
+                                📝 Update
+                            </Button>
+                            <Button Command="{Binding ToggleActiveCommand}" Height="40" Padding="20,10" FontSize="14" FontWeight="SemiBold"
+                                   Background="#ffc107" BorderBrush="#ffc107" Foreground="#212529">
+                                ⚡ Toggle
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
-        
-        <!-- Pricing Rule Form -->
-        <Grid Grid.Column="1" Margin="15,5,5,5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" 
-                       Text="Pricing Rule Details" 
-                       FontSize="16" 
-                       FontWeight="Bold"
-                       Margin="0,0,0,15"/>
-            
-            <TextBlock Grid.Row="1" Text="Rule Name:" FontWeight="Bold"/>
-            <TextBox Grid.Row="2" 
-                     Text="{Binding NewRuleName, UpdateSourceTrigger=PropertyChanged}"
-                     Height="30" 
-                     Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="3" Text="Description:" FontWeight="Bold"/>
-            <TextBox Grid.Row="4" 
-                     Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}"
-                     Height="50" 
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"
-                     Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="5" Text="Base Price per Km:" FontWeight="Bold"/>
-            <TextBox Grid.Row="6" 
-                     Text="{Binding NewBasePricePerKm, UpdateSourceTrigger=PropertyChanged}"
-                     Height="30" 
-                     Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="7" Text="Train Type:" FontWeight="Bold"/>
-            <ComboBox Grid.Row="8" 
-                      ItemsSource="{Binding TrainTypes}"
-                      SelectedValue="{Binding NewTrainTypeId}"
-                      SelectedValuePath="TrainTypeId"
-                      DisplayMemberPath="TypeName"
-                      Height="30" 
-                      Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="9" Text="Route:" FontWeight="Bold"/>
-            <ComboBox Grid.Row="10" 
-                      ItemsSource="{Binding Routes}"
-                      SelectedValue="{Binding NewRouteId}"
-                      SelectedValuePath="RouteId"
-                      DisplayMemberPath="RouteName"
-                      Height="30" 
-                      Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="11" Text="Priority:" FontWeight="Bold"/>
-            <TextBox Grid.Row="12" 
-                     Text="{Binding NewPriority, UpdateSourceTrigger=PropertyChanged}"
-                     Height="30" 
-                     Margin="0,5,0,10"/>
-            
-            <CheckBox Grid.Row="13" 
-                      IsChecked="{Binding NewIsForRoundTrip}"
-                      Content="Round Trip Rule"
-                      Margin="0,5,0,10"/>
-            
-            <CheckBox Grid.Row="14" 
-                      IsChecked="{Binding NewIsActive}"
-                      Content="Active"
-                      Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="15" Text="Effective From Date:" FontWeight="Bold"/>
-            <DatePicker Grid.Row="16" 
-                        SelectedDate="{Binding NewEffectiveFromDate}"
-                        Height="30" 
-                        Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="17" Text="Effective To Date:" FontWeight="Bold"/>
-            <DatePicker Grid.Row="18" 
-                        SelectedDate="{Binding NewEffectiveToDate}"
-                        Height="30" 
-                        Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="19" Text="Applicable Date Start:" FontWeight="Bold"/>
-            <DatePicker Grid.Row="20" 
-                        SelectedDate="{Binding NewApplicableDateStart}"
-                        Height="30" 
-                        Margin="0,5,0,10"/>
-            
-            <TextBlock Grid.Row="21" Text="Applicable Date End:" FontWeight="Bold"/>
-            <DatePicker Grid.Row="22" 
-                        SelectedDate="{Binding NewApplicableDateEnd}"
-                        Height="30" 
-                        Margin="0,5,0,15"/>
-            
-            <!-- Action Buttons -->
-            <StackPanel Grid.Row="23" 
-                        VerticalAlignment="Bottom">
-                <Button Content="Add Rule" 
-                        Command="{Binding AddPricingRuleCommand}"
-                        Height="35" 
-                        Margin="0,3"
-                        Background="LightGreen"/>
-                
-                <Button Content="Update Rule" 
-                        Command="{Binding UpdatePricingRuleCommand}"
-                        Height="35" 
-                        Margin="0,3"
-                        Background="LightBlue"/>
-                
-                <Button Content="Toggle Active" 
-                        Command="{Binding ToggleActiveCommand}"
-                        Height="35" 
-                        Margin="0,3"
-                        Background="Orange"/>
-                
-                <Button Content="Delete Rule" 
-                        Command="{Binding DeletePricingRuleCommand}"
-                        Height="35" 
-                        Margin="0,3"
-                        Background="LightCoral"/>
-                
-                <Button Content="Clear Form" 
-                        Command="{Binding ClearFormCommand}"
-                        Height="35" 
-                        Margin="0,3"/>
+
+        <!-- Status Messages -->
+        <Border Grid.Row="2" Padding="20,10" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,1,0,0">
+            <StackPanel>
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#dc3545" FontSize="14" FontWeight="Medium"/>
+                <TextBlock Text="{Binding SuccessMessage}" Foreground="#28a745" FontSize="14" FontWeight="Medium"/>
             </StackPanel>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

@@ -22,11 +22,11 @@ public class SeatTypeManagementViewModel : BaseManagerViewModel, IManagerTabView
         SaveCommand = new RelayCommand(_ => Save(), _ => CanSave());
         CancelCommand = new RelayCommand(_ => Cancel(), _ => CanCancel());
         // Override the base RefreshCommand to use our specific implementation
-        RefreshCommand = new RelayCommand(async _ => await LoadSeatTypesAsync());
+        RefreshCommand = new RelayCommand(_ => LoadSeatTypes());
         
         CurrentSeatType = new SeatType();
         
-        _ = LoadSeatTypesAsync();
+        LoadSeatTypes();
     }
 
     public ObservableCollection<SeatType> SeatTypes { get; }
@@ -127,26 +127,20 @@ public class SeatTypeManagementViewModel : BaseManagerViewModel, IManagerTabView
     public ICommand CancelCommand { get; }
     public new ICommand RefreshCommand { get; }
 
-    private async Task LoadSeatTypesAsync()
+    private void LoadSeatTypes()
     {
         try
         {
             IsLoading = true;
             ErrorMessage = null;
 
-            await Task.Run(() =>
+            var seatTypes = _seatTypeService.GetAllSeatTypes();
+            
+            SeatTypes.Clear();
+            foreach (var seatType in seatTypes)
             {
-                var seatTypes = _seatTypeService.GetAllSeatTypes();
-                
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    SeatTypes.Clear();
-                    foreach (var seatType in seatTypes)
-                    {
-                        SeatTypes.Add(seatType);
-                    }
-                });
-            });
+                SeatTypes.Add(seatType);
+            }
         }
         catch (Exception ex)
         {
@@ -352,7 +346,7 @@ public class SeatTypeManagementViewModel : BaseManagerViewModel, IManagerTabView
 
     public override void RefreshData()
     {
-        _ = LoadSeatTypesAsync();
+        LoadSeatTypes();
     }
 
     public override void ClearForm()

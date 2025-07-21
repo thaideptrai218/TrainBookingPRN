@@ -70,7 +70,30 @@ public class PricingRuleManagementViewModel : BaseManagerViewModel
     public PricingRule? SelectedPricingRule
     {
         get => _selectedPricingRule;
-        set => SetProperty(ref _selectedPricingRule, value);
+        set 
+        { 
+            SetProperty(ref _selectedPricingRule, value);
+            PopulateFormFromSelectedPricingRule();
+        }
+    }
+
+    private void PopulateFormFromSelectedPricingRule()
+    {
+        if (SelectedPricingRule != null)
+        {
+            NewRuleName = SelectedPricingRule.RuleName;
+            NewDescription = SelectedPricingRule.Description ?? string.Empty;
+            NewBasePricePerKm = SelectedPricingRule.BasePricePerKm;
+            NewTrainTypeId = SelectedPricingRule.TrainTypeId;
+            NewRouteId = SelectedPricingRule.RouteId;
+            NewPriority = SelectedPricingRule.Priority;
+            NewIsForRoundTrip = SelectedPricingRule.IsForRoundTrip ?? false;
+            NewIsActive = SelectedPricingRule.IsActive;
+            NewEffectiveFromDate = SelectedPricingRule.EffectiveFromDate.ToDateTime(TimeOnly.MinValue);
+            NewEffectiveToDate = SelectedPricingRule.EffectiveToDate?.ToDateTime(TimeOnly.MinValue);
+            NewApplicableDateStart = SelectedPricingRule.ApplicableDateStart?.ToDateTime(TimeOnly.MinValue);
+            NewApplicableDateEnd = SelectedPricingRule.ApplicableDateEnd?.ToDateTime(TimeOnly.MinValue);
+        }
     }
 
     public TrainType? SelectedTrainTypeFilter
