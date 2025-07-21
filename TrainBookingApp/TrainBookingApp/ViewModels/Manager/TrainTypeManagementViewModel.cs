@@ -36,7 +36,11 @@ public class TrainTypeManagementViewModel : BaseManagerViewModel
     public TrainType? SelectedTrainType
     {
         get => _selectedTrainType;
-        set => SetProperty(ref _selectedTrainType, value);
+        set 
+        { 
+            SetProperty(ref _selectedTrainType, value);
+            PopulateFormFromSelectedTrainType();
+        }
     }
 
     public string NewTypeName
@@ -244,6 +248,16 @@ public class TrainTypeManagementViewModel : BaseManagerViewModel
         catch (Exception ex)
         {
             SetErrorMessage($"Error searching train types: {ex.Message}");
+        }
+    }
+
+    private void PopulateFormFromSelectedTrainType()
+    {
+        if (SelectedTrainType != null)
+        {
+            NewTypeName = SelectedTrainType.TypeName;
+            NewDescription = SelectedTrainType.Description ?? string.Empty;
+            NewAverageVelocity = SelectedTrainType.AverageVelocity;
         }
     }
 

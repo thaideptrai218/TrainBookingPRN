@@ -1,164 +1,213 @@
-﻿<UserControl
-    x:Class="TrainBookingApp.Views.Manager.TrainTypeManagementView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:TrainBookingApp.Views.Manager">
-
+﻿<UserControl x:Class="TrainBookingApp.Views.Manager.TrainTypeManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TrainBookingApp.Views.Manager">
+    
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!--  Train Type List  -->
-        <Grid Grid.Column="0" Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <TextBlock
-                Grid.Row="0"
-                Margin="0,0,0,10"
-                FontSize="16"
-                FontWeight="Bold"
-                Text="Train Type List" />
-
-            <!--  Search  -->
-            <Grid Grid.Row="1" Margin="0,0,0,10">
+        <!-- Header Section -->
+        <Border Grid.Row="0" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox
-                    Grid.Column="0"
-                    Height="30"
-                    Padding="5"
-                    VerticalAlignment="Center"
-                    Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
+                <!-- Title -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Train Type Management" 
+                          FontSize="24" FontWeight="Bold" Foreground="#212529" Margin="0,0,0,15"/>
 
-                <Button
-                    Grid.Column="1"
-                    Width="80"
-                    Height="30"
-                    Margin="5,0,0,0"
-                    Command="{Binding SearchTrainTypesCommand}"
-                    Content="Search" />
+                <!-- Search Section -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBox Width="300" Height="35" Padding="10,8" FontSize="14"
+                             Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
+                             Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                    
+                    <Button Command="{Binding SearchTrainTypesCommand}" Margin="10,0,0,0" Height="35" Width="80"
+                            Background="#17a2b8" BorderBrush="#17a2b8" Foreground="White" FontSize="14">
+                        🔍 Search
+                    </Button>
+                    
+                    <Button Command="{Binding RefreshDataCommand}" Margin="10,0,0,0" Height="35" Width="35"
+                            Background="#6c757d" BorderBrush="#6c757d" Foreground="White" FontSize="16">
+                        🔄
+                    </Button>
+                </StackPanel>
+
+                <Button Grid.Row="1" Grid.Column="1" Command="{Binding AddTrainTypeCommand}" 
+                        Height="35" Padding="20,8" FontSize="14" FontWeight="SemiBold"
+                        Background="#28a745" BorderBrush="#28a745" Foreground="White">
+                    ➕ Add Train Type
+                </Button>
             </Grid>
+        </Border>
 
-            <!--  Train Type DataGrid  -->
-            <DataGrid
-                Grid.Row="2"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
-                ItemsSource="{Binding TrainTypes}"
-                SelectedItem="{Binding SelectedTrainType}"
-                SelectionChanged="TrainTypeDataGrid_SelectionChanged"
-                SelectionMode="Single">
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="150"
-                        Binding="{Binding TypeName}"
-                        Header="Type Name" />
-                    <DataGridTextColumn
-                        Width="100"
-                        Binding="{Binding AverageVelocity}"
-                        Header="Avg. Velocity" />
-                    <DataGridTextColumn
-                        Width="200"
-                        Binding="{Binding Description}"
-                        Header="Description" />
-                </DataGrid.Columns>
-            </DataGrid>
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="450"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1.5*" MinWidth="350"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Train Types List -->
+            <Border Grid.Column="0" Background="White" BorderBrush="#dee2e6" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- List Header -->
+                    <Border Grid.Row="0" Background="#e9ecef" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="15,12">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🚄 Train Types" FontSize="16" FontWeight="SemiBold" Foreground="#495057"/>
+                            <Border Background="#6c757d" CornerRadius="10" Padding="8,4" Margin="15,0,0,0">
+                                <TextBlock Text="{Binding TrainTypes.Count}" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Loading Indicator - Hidden by default -->
+                    <TextBlock Grid.Row="1" Text="Loading train types..." FontSize="14" Foreground="#6c757d" 
+                              HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+
+                    <!-- Empty State - Hidden by default -->
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+                        <TextBlock Text="🚄" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="#adb5bd"/>
+                        <TextBlock Text="No train types found" FontSize="16" Foreground="#6c757d" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Click 'Add Train Type' to create your first train type" 
+                                  FontSize="12" Foreground="#adb5bd" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+
+                    <!-- Train Types DataGrid -->
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding TrainTypes}" 
+                             SelectedItem="{Binding SelectedTrainType}"
+                             AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                             GridLinesVisibility="None" BorderThickness="0"
+                             AlternatingRowBackground="#f8f9fa" RowBackground="White"
+                             HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Type Name" Binding="{Binding TypeName}" Width="*" MinWidth="150"/>
+                            <DataGridTextColumn Header="Avg. Velocity (km/h)" Binding="{Binding AverageVelocity, StringFormat=N0}" Width="140"/>
+
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="120"/>
+
+                            <DataGridTemplateColumn Header="Actions" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                                            <Button Command="{Binding DataContext.UpdateTrainTypeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   CommandParameter="{Binding}" Width="28" Height="28" Margin="2,0"
+                                                   Background="#17a2b8" BorderBrush="#17a2b8" Foreground="White" FontSize="12">
+                                                ✏️
+                                            </Button>
+                                            <Button Command="{Binding DataContext.DeleteTrainTypeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                   CommandParameter="{Binding}" Width="28" Height="28" Margin="2,0"
+                                                   Background="#dc3545" BorderBrush="#dc3545" Foreground="White" FontSize="12">
+                                                🗑️
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <!-- Train Type Form -->
+            <Border Grid.Column="2" Background="White" BorderBrush="#dee2e6" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Form Header -->
+                    <Border Grid.Row="0" Background="#6f42c1" BorderBrush="#dee2e6" BorderThickness="0,0,0,1" Padding="15,12">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🚄" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Train Type Details" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Form Fields -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
+                        <StackPanel>
+                            <!-- Type Name Field -->
+                            <TextBlock Text="Type Name *" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewTypeName, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="40" Padding="12,10" FontSize="14" Margin="0,0,0,5"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                            <TextBlock Text="Descriptive name for this train type (e.g., High-Speed Express)" 
+                                      FontSize="12" Foreground="#6c757d" Margin="0,0,0,20"/>
+
+                            <!-- Average Velocity Field -->
+                            <TextBlock Text="Average Velocity (km/h) *" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewAverageVelocity, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="40" Padding="12,10" FontSize="14" Margin="0,0,0,5"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1"/>
+                            <TextBlock Text="Average operating speed in kilometers per hour" 
+                                      FontSize="12" Foreground="#6c757d" Margin="0,0,0,20"/>
+
+                            <!-- Train Type Info -->
+                            <Border Background="#e3f2fd" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+                                <StackPanel>
+                                    <TextBlock Text="Train Type Information" FontWeight="SemiBold" Foreground="#1976d2" Margin="0,0,0,10"/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#424242">
+                                        • Average velocity determines train speed classification<LineBreak/>
+                                        • Higher velocities indicate faster, more modern trains<LineBreak/>
+                                        • This affects scheduling and pricing calculations
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Description Field -->
+                            <TextBlock Text="Description" FontWeight="SemiBold" Foreground="#495057" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}" 
+                                    Height="80" Padding="12,10" FontSize="14" TextWrapping="Wrap" AcceptsReturn="True"
+                                    Background="White" BorderBrush="#ced4da" BorderThickness="1" VerticalScrollBarVisibility="Auto"/>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Form Actions -->
+                    <Border Grid.Row="2" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,1,0,0" Padding="20,15">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Command="{Binding ClearFormCommand}" Height="40" Padding="20,10" FontSize="14" Margin="0,0,10,0"
+                                   Background="White" BorderBrush="#6c757d" BorderThickness="1" Foreground="#6c757d">
+                                Clear Form
+                            </Button>
+                            <Button Command="{Binding AddTrainTypeCommand}" Height="40" Padding="20,10" FontSize="14" FontWeight="SemiBold" Margin="0,0,5,0"
+                                   Background="#28a745" BorderBrush="#28a745" Foreground="White">
+                                💾 Add Train Type
+                            </Button>
+                            <Button Command="{Binding UpdateTrainTypeCommand}" Height="40" Padding="20,10" FontSize="14" FontWeight="SemiBold"
+                                   Background="#6f42c1" BorderBrush="#6f42c1" Foreground="White">
+                                📝 Update
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
 
-        <!--  Train Type Form  -->
-        <Grid Grid.Column="1" Margin="15,5,5,5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <TextBlock
-                Grid.Row="0"
-                Margin="0,0,0,15"
-                FontSize="16"
-                FontWeight="Bold"
-                Text="Train Type Details" />
-
-            <TextBlock
-                Grid.Row="1"
-                FontWeight="Bold"
-                Text="Type Name:" />
-            <TextBox
-                Grid.Row="2"
-                Height="30"
-                Margin="0,5,0,10"
-                Text="{Binding NewTypeName, UpdateSourceTrigger=PropertyChanged}" />
-
-            <TextBlock
-                Grid.Row="3"
-                FontWeight="Bold"
-                Text="Average Velocity (km/h):" />
-            <TextBox
-                Grid.Row="4"
-                Height="30"
-                Margin="0,5,0,10"
-                Text="{Binding NewAverageVelocity, UpdateSourceTrigger=PropertyChanged}" />
-
-            <TextBlock
-                Grid.Row="5"
-                FontWeight="Bold"
-                Text="Description:" />
-            <TextBox
-                Grid.Row="6"
-                Height="80"
-                Margin="0,5,0,15"
-                AcceptsReturn="True"
-                Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto" />
-
-            <!--  Train Type Action Buttons  -->
-            <StackPanel Grid.Row="9" VerticalAlignment="Bottom">
-                <Button
-                    Height="35"
-                    Margin="0,5"
-                    Background="LightGreen"
-                    Command="{Binding AddTrainTypeCommand}"
-                    Content="Add Train Type" />
-
-                <Button
-                    Height="35"
-                    Margin="0,5"
-                    Background="LightBlue"
-                    Command="{Binding UpdateTrainTypeCommand}"
-                    Content="Update Train Type" />
-
-                <Button
-                    Height="35"
-                    Margin="0,5"
-                    Background="LightCoral"
-                    Command="{Binding DeleteTrainTypeCommand}"
-                    Content="Delete Train Type" />
-
-                <Button
-                    Height="35"
-                    Margin="0,5"
-                    Command="{Binding ClearFormCommand}"
-                    Content="Clear Form" />
+        <!-- Status Messages -->
+        <Border Grid.Row="2" Padding="20,10" Background="#f8f9fa" BorderBrush="#dee2e6" BorderThickness="0,1,0,0">
+            <StackPanel>
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#dc3545" FontSize="14" FontWeight="Medium"/>
+                <TextBlock Text="{Binding SuccessMessage}" Foreground="#28a745" FontSize="14" FontWeight="Medium"/>
             </StackPanel>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

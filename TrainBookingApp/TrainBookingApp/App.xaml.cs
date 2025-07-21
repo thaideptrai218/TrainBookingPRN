@@ -31,8 +31,8 @@ public partial class App : Application
 
     private void ConfigureServices(ServiceCollection services)
     {
-        // Register DbContext
-        services.AddDbContext<Context>();
+        // Register DbContext as Scoped to avoid threading issues
+        services.AddDbContext<Context>(ServiceLifetime.Scoped);
 
         // Register services
         services.AddTransient<IPasswordService, PasswordService>();

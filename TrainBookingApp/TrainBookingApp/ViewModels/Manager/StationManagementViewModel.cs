@@ -39,7 +39,11 @@ public class StationManagementViewModel : BaseManagerViewModel
     public Station? SelectedStation
     {
         get => _selectedStation;
-        set => SetProperty(ref _selectedStation, value);
+        set 
+        { 
+            SetProperty(ref _selectedStation, value);
+            PopulateFormFromSelectedStation();
+        }
     }
 
     public string NewStationCode
@@ -280,6 +284,19 @@ public class StationManagementViewModel : BaseManagerViewModel
         catch (Exception ex)
         {
             SetErrorMessage($"Error searching stations: {ex.Message}");
+        }
+    }
+
+    private void PopulateFormFromSelectedStation()
+    {
+        if (SelectedStation != null)
+        {
+            NewStationCode = SelectedStation.StationCode;
+            NewStationName = SelectedStation.StationName;
+            NewStationAddress = SelectedStation.Address ?? string.Empty;
+            NewStationCity = SelectedStation.City ?? string.Empty;
+            NewStationRegion = SelectedStation.Region ?? string.Empty;
+            NewStationPhone = SelectedStation.PhoneNumber ?? string.Empty;
         }
     }
 
