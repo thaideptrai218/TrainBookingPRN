@@ -1,4 +1,5 @@
 # 🚂 Train Booking System
+[![.NET CI](https://github.com/thaideptrai218/TrainBookingPRN/actions/workflows/dotnet-ci.yml/badge.svg?branch=main)](https://github.com/thaideptrai218/TrainBookingPRN/actions/workflows/dotnet-ci.yml)
 
 <div align="center">
   <h3>A Desktop Train Booking System built with .NET 8 WPF</h3>
