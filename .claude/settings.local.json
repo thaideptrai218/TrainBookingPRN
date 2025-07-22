@@ -4,7 +4,13 @@
       "Bash(mkdir:*)",
       "Bash(dotnet build)",
       "Bash(dotnet run)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet add reference:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet sln add:*)",
+      "Bash(dotnet test:*)"
     ],
     "deny": []
   }

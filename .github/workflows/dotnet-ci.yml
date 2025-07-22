@@ -1,0 +1,29 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore Dependencies
+      run: dotnet restore TrainBookingApp/TrainBookingApp.sln
+      
+    - name: Build Solution
+      run: dotnet build TrainBookingApp/TrainBookingApp.sln --no-restore --configuration Release
+      
+    - name: Run Tests
+      run: dotnet test TrainBookingApp/TrainManagementWPF.Tests/TrainManagementWPF.Tests.csproj --no-build --verbosity normal --configuration Release
