@@ -14,7 +14,7 @@ public class SeatSelectionViewModel : BaseViewModel
     private readonly User _currentUser;
     
     private ObservableCollection<Coach> _coaches = new();
-    private ObservableCollection<Seat> _availableSeats = new();
+    private ObservableCollection<SeatWithStatus> _allSeats = new();
     private ObservableCollection<Seat> _selectedSeats = new();
     private Coach? _selectedCoach;
     private decimal _totalPrice = 0;
@@ -53,10 +53,10 @@ public class SeatSelectionViewModel : BaseViewModel
         set => SetProperty(ref _coaches, value);
     }
 
-    public ObservableCollection<Seat> AvailableSeats
+    public ObservableCollection<SeatWithStatus> AllSeats
     {
-        get => _availableSeats;
-        set => SetProperty(ref _availableSeats, value);
+        get => _allSeats;
+        set => SetProperty(ref _allSeats, value);
     }
 
     public ObservableCollection<Seat> SelectedSeats
@@ -153,10 +153,13 @@ public class SeatSelectionViewModel : BaseViewModel
     {
         try
         {
-            var seats = _bookingService.GetAvailableSeats(SelectedTrip.TripId, coachId);
-            AvailableSeats = new ObservableCollection<Seat>(seats);
+            var seatsWithStatus = _bookingService.GetAllSeatsWithStatus(SelectedTrip.TripId, coachId);
+            AllSeats = new ObservableCollection<SeatWithStatus>(seatsWithStatus);
             
-            StatusMessage = $"Loaded {AvailableSeats.Count} available seats in coach {SelectedCoach?.CoachName}.";
+            var availableCount = AllSeats.Count(s => s.Status == SeatStatus.Available);
+            var occupiedCount = AllSeats.Count(s => s.Status == SeatStatus.Occupied);
+            
+            StatusMessage = $"Loaded {AllSeats.Count} seats ({availableCount} available, {occupiedCount} occupied) in coach {SelectedCoach?.CoachName}.";
         }
         catch (Exception ex)
         {
@@ -178,27 +181,34 @@ public class SeatSelectionViewModel : BaseViewModel
 
     private bool CanSelectSeat(object? parameter)
     {
-        return parameter is Seat seat && 
-               SelectedSeats.Count < PassengerCount && 
-               !SelectedSeats.Contains(seat);
+        if (parameter is not SeatWithStatus seatWithStatus) return false;
+        
+        return seatWithStatus.Status == SeatStatus.Available &&
+               !seatWithStatus.IsSelected &&
+               SelectedSeats.Count < PassengerCount &&
+               !SelectedSeats.Any(s => s.SeatId == seatWithStatus.Seat.SeatId);
     }
 
     private void SelectSeat(object? parameter)
     {
-        if (parameter is not Seat seat) return;
+        if (parameter is not SeatWithStatus seatWithStatus) return;
 
         try
         {
             // Hold the seat temporarily
-            var success = _bookingService.HoldSeats(SelectedTrip.TripId, new List<int> { seat.SeatId }, CurrentUser.UserId);
+            var success = _bookingService.HoldSeats(SelectedTrip.TripId, new List<int> { seatWithStatus.Seat.SeatId }, CurrentUser.UserId);
             
             if (success)
             {
-                SelectedSeats.Add(seat);
-                AvailableSeats.Remove(seat);
+                SelectedSeats.Add(seatWithStatus.Seat);
+                
+                // Update the seat status in the AllSeats collection
+                seatWithStatus.Status = SeatStatus.Selected;
+                seatWithStatus.IsSelected = true;
+                
                 UpdateTotalPrice();
                 
-                StatusMessage = $"Seat {seat.SeatName} selected. {PassengerCount - SelectedSeats.Count} more needed.";
+                StatusMessage = $"Seat {seatWithStatus.Seat.SeatName} selected. {PassengerCount - SelectedSeats.Count} more needed.";
                 OnPropertyChanged(nameof(CanProceedToBooking));
             }
             else
@@ -229,7 +239,15 @@ public class SeatSelectionViewModel : BaseViewModel
             if (success)
             {
                 SelectedSeats.Remove(seat);
-                AvailableSeats.Add(seat);
+                
+                // Find the corresponding seat in AllSeats and update its status
+                var seatWithStatus = AllSeats.FirstOrDefault(s => s.Seat.SeatId == seat.SeatId);
+                if (seatWithStatus != null)
+                {
+                    seatWithStatus.Status = SeatStatus.Available;
+                    seatWithStatus.IsSelected = false;
+                }
+                
                 UpdateTotalPrice();
                 
                 StatusMessage = $"Seat {seat.SeatName} unselected. {PassengerCount - SelectedSeats.Count} more needed.";

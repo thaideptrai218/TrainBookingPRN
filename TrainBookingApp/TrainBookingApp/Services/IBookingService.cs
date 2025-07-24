@@ -6,6 +6,7 @@ public interface IBookingService
 {
     IEnumerable<Booking> GetUserBookings(int userId);
     IEnumerable<Seat> GetAvailableSeats(int tripId, int? coachId = null);
+    IEnumerable<SeatWithStatus> GetAllSeatsWithStatus(int tripId, int? coachId = null);
     bool IsValidBookingData(Booking booking);
     bool CreateBooking(Booking booking, List<Passenger> passengers, int tripId, List<int> seatIds);
     bool CancelBooking(int bookingId, string reason);

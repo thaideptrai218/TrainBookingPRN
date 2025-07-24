@@ -63,6 +63,42 @@ public class BookingService : IBookingService
                    .ToList();
     }
 
+    public IEnumerable<SeatWithStatus> GetAllSeatsWithStatus(int tripId, int? coachId = null)
+    {
+        var bookedSeatIds = _context.Tickets
+            .Where(t => t.TripId == tripId)
+            .Select(t => t.SeatId)
+            .ToList();
+
+        var heldSeatIds = _context.TemporarySeatHolds
+            .Where(h => h.TripId == tripId && h.ExpiresAt > DateTime.Now)
+            .Select(h => h.SeatId)
+            .ToList();
+
+        var query = _context.Seats
+            .Include(s => s.Coach)
+            .Include(s => s.SeatType)
+            .AsQueryable();
+
+        if (coachId.HasValue)
+        {
+            query = query.Where(s => s.CoachId == coachId.Value);
+        }
+
+        var allSeats = query.OrderBy(s => s.Coach.CoachNumber)
+                           .ThenBy(s => s.SeatNumber)
+                           .ToList();
+
+        return allSeats.Select(seat => new SeatWithStatus
+        {
+            Seat = seat,
+            Status = bookedSeatIds.Contains(seat.SeatId) ? SeatStatus.Occupied :
+                    heldSeatIds.Contains(seat.SeatId) ? SeatStatus.Held :
+                    SeatStatus.Available,
+            IsSelected = false
+        }).ToList();
+    }
+
     public bool IsValidBookingData(Booking booking)
     {
         if (booking == null) return false;

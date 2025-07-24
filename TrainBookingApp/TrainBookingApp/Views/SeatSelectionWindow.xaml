@@ -109,7 +109,7 @@
                             Text="{Binding SelectedCoach.CoachName, StringFormat='Coach: {0}'}" />
 
                         <!--  Seat Grid  -->
-                        <ItemsControl ItemsSource="{Binding AvailableSeats}">
+                        <ItemsControl ItemsSource="{Binding AllSeats}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel
@@ -124,11 +124,31 @@
                                         Width="50"
                                         Height="50"
                                         Margin="2"
-                                        Background="LightGreen"
                                         Command="{Binding DataContext.SelectSeatCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                         CommandParameter="{Binding}"
-                                        Content="{Binding SeatName}"
-                                        ToolTip="{Binding SeatType.TypeName}" />
+                                        Content="{Binding Seat.SeatName}"
+                                        ToolTip="{Binding Seat.SeatType.TypeName}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="LightGreen"/>
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Occupied">
+                                                        <Setter Property="Background" Value="Gray"/>
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Held">
+                                                        <Setter Property="Background" Value="Orange"/>
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Selected">
+                                                        <Setter Property="Background" Value="LightBlue"/>
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -191,14 +211,6 @@
                         Margin="0,0,5,0"
                         Fill="LightGreen" />
                     <TextBlock VerticalAlignment="Center" Text="Available" />
-                </StackPanel>
-                <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Margin="0,0,5,0"
-                        Fill="LightBlue" />
-                    <TextBlock VerticalAlignment="Center" Text="Selected" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Rectangle
