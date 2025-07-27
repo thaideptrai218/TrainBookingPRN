@@ -356,14 +356,73 @@ public class CustomerViewModel : BaseViewModel
 
     private bool CanCancelBooking(object? parameter)
     {
-        return parameter is Booking booking && 
-               booking.BookingStatus == "Confirmed" &&
-               (booking.ExpiredAt == null || booking.ExpiredAt > DateTime.Now);
+        if (parameter is not Booking booking) return false;
+        
+        // Check if booking is confirmed and not expired
+        if (booking.BookingStatus != "Confirmed" || 
+            (booking.ExpiredAt != null && booking.ExpiredAt <= DateTime.Now))
+        {
+            return false;
+        }
+        
+        // Check if any trip departure date has already passed
+        if (booking.Tickets == null || !booking.Tickets.Any())
+        {
+            return false; // No tickets, cannot cancel
+        }
+        
+        var ticketsWithTrips = booking.Tickets.Where(t => t.Trip != null).ToList();
+        if (!ticketsWithTrips.Any())
+        {
+            return false; // No valid trips found
+        }
+        
+        var earliestDeparture = ticketsWithTrips.Min(t => t.Trip.DepartureDateTime);
+            
+        // Cannot cancel if the earliest trip has already departed
+        return earliestDeparture > DateTime.Now;
     }
 
     private void CancelBooking(object? parameter)
     {
         if (parameter is not Booking booking) return;
+
+        // Double-check cancellation eligibility with detailed messaging
+        if (!CanCancelBooking(parameter))
+        {
+            if (booking.BookingStatus != "Confirmed")
+            {
+                StatusMessage = $"Cannot cancel booking - Status: {booking.BookingStatus}";
+                return;
+            }
+            
+            if (booking.ExpiredAt != null && booking.ExpiredAt <= DateTime.Now)
+            {
+                StatusMessage = "Cannot cancel booking - Booking has expired";
+                return;
+            }
+            
+            if (booking.Tickets == null || !booking.Tickets.Any())
+            {
+                StatusMessage = "Cannot cancel booking - No tickets found";
+                return;
+            }
+            
+            var ticketsWithTrips = booking.Tickets.Where(t => t.Trip != null).ToList();
+            if (!ticketsWithTrips.Any())
+            {
+                StatusMessage = "Cannot cancel booking - No valid trips found";
+                return;
+            }
+            
+            var earliestDeparture = ticketsWithTrips.Min(t => t.Trip.DepartureDateTime);
+                
+            if (earliestDeparture <= DateTime.Now)
+            {
+                StatusMessage = "Cannot cancel booking - Trip departure time has already passed";
+                return;
+            }
+        }
 
         try
         {

@@ -1,0 +1,253 @@
+<UserControl x:Class="TrainBookingApp.Views.Manager.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000">
+    
+    <UserControl.Resources>
+        <Style x:Key="MetricCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="MetricTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#666"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        
+        <Style x:Key="MetricValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333"/>
+        </Style>
+        
+        <Style x:Key="QuickMetricValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#007bff"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Header Section -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Revenue Dashboard" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="#333"/>
+                    <TextBlock Text="Track and analyze your train booking revenue" 
+                               FontSize="16" 
+                               Foreground="#666" 
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" 
+                        Content="Refresh Data" 
+                        Command="{Binding RefreshDataCommand}"
+                        Width="120" 
+                        Height="40"
+                        Background="#007bff" 
+                        Foreground="White"
+                        BorderThickness="0"
+                        FontWeight="SemiBold"/>
+            </Grid>
+            
+            <!-- Time Period Selection -->
+            <Border Grid.Row="1" Style="{StaticResource MetricCardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Time Period" Style="{StaticResource MetricTitleStyle}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <ComboBox Grid.Column="0" 
+                                  ItemsSource="{Binding TimePeriodOptions}"
+                                  SelectedItem="{Binding SelectedTimePeriod}"
+                                  Height="35" 
+                                  VerticalAlignment="Top"/>
+                        
+                        <StackPanel Grid.Column="1" 
+                                    Orientation="Horizontal" 
+                                    Margin="20,0,0,0">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsCustomRangeVisible}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock Text="From:" 
+                                       VerticalAlignment="Center" 
+                                       Margin="0,0,10,0"/>
+                            <DatePicker SelectedDate="{Binding SelectedStartDate}" 
+                                        Width="130" 
+                                        Height="35"/>
+                            <TextBlock Text="To:" 
+                                       VerticalAlignment="Center" 
+                                       Margin="20,0,10,0"/>
+                            <DatePicker SelectedDate="{Binding SelectedEndDate}" 
+                                        Width="130" 
+                                        Height="35"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            
+            <!-- Quick Revenue Metrics -->
+            <Border Grid.Row="2" Style="{StaticResource MetricCardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Quick Revenue Overview" Style="{StaticResource MetricTitleStyle}"/>
+                    <UniformGrid Columns="5" Rows="1">
+                        <StackPanel Margin="0,0,20,0">
+                            <TextBlock Text="Today" FontWeight="SemiBold" Foreground="#666"/>
+                            <TextBlock Text="{Binding DailyRevenue, StringFormat=C}" Style="{StaticResource QuickMetricValueStyle}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,20,0">
+                            <TextBlock Text="This Week" FontWeight="SemiBold" Foreground="#666"/>
+                            <TextBlock Text="{Binding WeeklyRevenue, StringFormat=C}" Style="{StaticResource QuickMetricValueStyle}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,20,0">
+                            <TextBlock Text="This Month" FontWeight="SemiBold" Foreground="#666"/>
+                            <TextBlock Text="{Binding MonthlyRevenue, StringFormat=C}" Style="{StaticResource QuickMetricValueStyle}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,20,0">
+                            <TextBlock Text="This Quarter" FontWeight="SemiBold" Foreground="#666"/>
+                            <TextBlock Text="{Binding QuarterlyRevenue, StringFormat=C}" Style="{StaticResource QuickMetricValueStyle}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="This Year" FontWeight="SemiBold" Foreground="#666"/>
+                            <TextBlock Text="{Binding YearlyRevenue, StringFormat=C}" Style="{StaticResource QuickMetricValueStyle}"/>
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+            
+            <!-- Main Revenue Metrics -->
+            <UniformGrid Grid.Row="3" Columns="4" Rows="1" Margin="0,0,0,20">
+                <Border Style="{StaticResource MetricCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Total Revenue" Style="{StaticResource MetricTitleStyle}"/>
+                        <TextBlock Text="{Binding TotalRevenue, StringFormat=C}" Style="{StaticResource MetricValueStyle}"/>
+                    </StackPanel>
+                </Border>
+                
+                <Border Style="{StaticResource MetricCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Total Bookings" Style="{StaticResource MetricTitleStyle}"/>
+                        <TextBlock Text="{Binding TotalBookings, StringFormat=N0}" Style="{StaticResource MetricValueStyle}"/>
+                    </StackPanel>
+                </Border>
+                
+                <Border Style="{StaticResource MetricCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Average Booking" Style="{StaticResource MetricTitleStyle}"/>
+                        <TextBlock Text="{Binding AverageBookingValue, StringFormat=C}" Style="{StaticResource MetricValueStyle}"/>
+                    </StackPanel>
+                </Border>
+                
+                <Border Style="{StaticResource MetricCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Net Revenue" Style="{StaticResource MetricTitleStyle}"/>
+                        <TextBlock Text="{Binding NetRevenue, StringFormat=C}" Style="{StaticResource MetricValueStyle}"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+            
+            <!-- Charts and Detailed Data -->
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Revenue Chart Section -->
+                <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Revenue Trend" Style="{StaticResource MetricTitleStyle}"/>
+                        
+                        <!-- Simple chart representation using DataGrid -->
+                        <DataGrid ItemsSource="{Binding DailyRevenueData}"
+                                  AutoGenerateColumns="False"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="Horizontal"
+                                  RowHeaderWidth="0"
+                                  Height="300"
+                                  Margin="0,10,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Date" 
+                                                    Binding="{Binding Date, StringFormat=d}" 
+                                                    Width="100"/>
+                                <DataGridTextColumn Header="Revenue" 
+                                                    Binding="{Binding Revenue, StringFormat=C}" 
+                                                    Width="120"/>
+                                <DataGridTextColumn Header="Bookings" 
+                                                    Binding="{Binding BookingCount}" 
+                                                    Width="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Top Routes Section -->
+                <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Top Routes by Revenue" Style="{StaticResource MetricTitleStyle}"/>
+                        
+                        <DataGrid ItemsSource="{Binding TopRoutes}"
+                                  AutoGenerateColumns="False"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="Horizontal"
+                                  RowHeaderWidth="0"
+                                  Height="300"
+                                  Margin="0,10,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Route" 
+                                                    Binding="{Binding RouteName}" 
+                                                    Width="*"/>
+                                <DataGridTextColumn Header="Revenue" 
+                                                    Binding="{Binding Revenue, StringFormat=C}" 
+                                                    Width="100"/>
+                                <DataGridTextColumn Header="Bookings" 
+                                                    Binding="{Binding BookingCount}" 
+                                                    Width="70"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -54,6 +54,11 @@
                     SelectedIndex="{Binding SelectedTabIndex}"
                     Margin="10">
             
+            <!-- Revenue Dashboard Tab -->
+            <TabItem Header="Revenue Dashboard">
+                <manager:DashboardView DataContext="{Binding DashboardViewModel}" />
+            </TabItem>
+            
             <!-- Station Management Tab -->
             <TabItem Header="Station Management">
                 <manager:StationManagementView DataContext="{Binding StationManagementViewModel}" />

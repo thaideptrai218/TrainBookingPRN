@@ -49,6 +49,7 @@ public partial class App : Application
         services.AddTransient<IPricingRuleService, PricingRuleService>();
         services.AddTransient<IPassengerTypeService, PassengerTypeService>();
         services.AddTransient<IBookingService, BookingService>();
+        services.AddTransient<IRevenueAnalyticsService, RevenueAnalyticsService>();
 
         // Register ViewModels
         services.AddTransient<LoginViewModel>();
@@ -68,6 +69,7 @@ public partial class App : Application
         services.AddTransient<RouteManagementViewModel>();
         services.AddTransient<TripManagementViewModel>();
         services.AddTransient<PricingRuleManagementViewModel>();
+        services.AddTransient<DashboardViewModel>();
         services.AddTransient<MainManagerViewModel>();
 
         // Register Views
@@ -89,6 +91,7 @@ public partial class App : Application
         services.AddTransient<RouteManagementView>();
         services.AddTransient<TripManagementView>();
         services.AddTransient<PricingRuleManagementView>();
+        services.AddTransient<DashboardView>();
     }
 
     protected override void OnExit(ExitEventArgs e)

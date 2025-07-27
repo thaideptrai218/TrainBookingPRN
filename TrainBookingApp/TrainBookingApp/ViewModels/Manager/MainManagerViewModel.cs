@@ -12,6 +12,7 @@ public class MainManagerViewModel : BaseViewModel
     private User? _currentUser;
 
     public MainManagerViewModel(
+        DashboardViewModel dashboardViewModel,
         StationManagementViewModel stationManagementViewModel,
         TrainTypeManagementViewModel trainTypeManagementViewModel,
         CoachTypeManagementViewModel coachTypeManagementViewModel,
@@ -21,6 +22,7 @@ public class MainManagerViewModel : BaseViewModel
         TripManagementViewModel tripManagementViewModel,
         PricingRuleManagementViewModel pricingRuleManagementViewModel)
     {
+        DashboardViewModel = dashboardViewModel;
         StationManagementViewModel = stationManagementViewModel;
         TrainTypeManagementViewModel = trainTypeManagementViewModel;
         CoachTypeManagementViewModel = coachTypeManagementViewModel;
@@ -33,6 +35,7 @@ public class MainManagerViewModel : BaseViewModel
         // Initialize tab ViewModels collection
         TabViewModels = new ObservableCollection<IManagerTabViewModel>
         {
+            DashboardViewModel,
             StationManagementViewModel,
             TrainTypeManagementViewModel,
             CoachTypeManagementViewModel,
@@ -53,6 +56,7 @@ public class MainManagerViewModel : BaseViewModel
 
     public ObservableCollection<IManagerTabViewModel> TabViewModels { get; }
 
+    public DashboardViewModel DashboardViewModel { get; }
     public StationManagementViewModel StationManagementViewModel { get; }
     public TrainTypeManagementViewModel TrainTypeManagementViewModel { get; }
     public CoachTypeManagementViewModel CoachTypeManagementViewModel { get; }
@@ -101,6 +105,7 @@ public class MainManagerViewModel : BaseViewModel
     public ICommand RefreshAllCommand { get; private set; } = null!;
     public ICommand RefreshCurrentTabCommand { get; private set; } = null!;
     public ICommand LogoutCommand { get; private set; } = null!;
+    public ICommand SwitchToDashboardCommand { get; private set; } = null!;
     public ICommand SwitchToStationsCommand { get; private set; } = null!;
     public ICommand SwitchToTrainTypesCommand { get; private set; } = null!;
     public ICommand SwitchToCoachTypesCommand { get; private set; } = null!;
@@ -125,14 +130,15 @@ public class MainManagerViewModel : BaseViewModel
         RefreshAllCommand = new RelayCommand(_ => RefreshAll());
         RefreshCurrentTabCommand = new RelayCommand(_ => RefreshCurrentTab());
         LogoutCommand = new RelayCommand(_ => Logout());
-        SwitchToStationsCommand = new RelayCommand(_ => SwitchToTab(0));
-        SwitchToTrainTypesCommand = new RelayCommand(_ => SwitchToTab(1));
-        SwitchToCoachTypesCommand = new RelayCommand(_ => SwitchToTab(2));
-        SwitchToSeatTypesCommand = new RelayCommand(_ => SwitchToTab(3));
-        SwitchToTrainsCommand = new RelayCommand(_ => SwitchToTab(4));
-        SwitchToRoutesCommand = new RelayCommand(_ => SwitchToTab(5));
-        SwitchToTripsCommand = new RelayCommand(_ => SwitchToTab(6));
-        SwitchToPricingRulesCommand = new RelayCommand(_ => SwitchToTab(7));
+        SwitchToDashboardCommand = new RelayCommand(_ => SwitchToTab(0));
+        SwitchToStationsCommand = new RelayCommand(_ => SwitchToTab(1));
+        SwitchToTrainTypesCommand = new RelayCommand(_ => SwitchToTab(2));
+        SwitchToCoachTypesCommand = new RelayCommand(_ => SwitchToTab(3));
+        SwitchToSeatTypesCommand = new RelayCommand(_ => SwitchToTab(4));
+        SwitchToTrainsCommand = new RelayCommand(_ => SwitchToTab(5));
+        SwitchToRoutesCommand = new RelayCommand(_ => SwitchToTab(6));
+        SwitchToTripsCommand = new RelayCommand(_ => SwitchToTab(7));
+        SwitchToPricingRulesCommand = new RelayCommand(_ => SwitchToTab(8));
     }
 
     #endregion
